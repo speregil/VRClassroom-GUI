@@ -13,6 +13,7 @@ public class ManagerMenu : MonoBehaviour {
 
 	public  	GameObject					ElementoMenu;  			//Prefab de un elemento del menu
 	public		GameObject					ScrollPanel;			//Panel que contiene los elementos
+	public		GameObject					Flecha;					//Icono que muestra que hay mas objetos escondidos hacia la derecha;
 	public		float						DistanciaElementos;		//Distancia entre los elementos del menu
 	public		float						CambioEscala; 			//Cambio en la escala de los distintos elementos a lo largo de la horizontal
 
@@ -99,6 +100,12 @@ public class ManagerMenu : MonoBehaviour {
 			imgComp.color = Color.red;
 			ElementoActual = siguiente;
 
+			//Si hay mas elementos a la derecha, activa la indicacion visual
+			if(ElementoActual.Previous != null){
+				if(ElementoActual.Previous.Previous != null)
+					Flecha.SetActive(true);
+			}
+
 			// Mueve recursivamente todo el menu hacia la izquierda
 			MoverIzquierda (siguiente);
 		}
@@ -163,6 +170,12 @@ public class ManagerMenu : MonoBehaviour {
 			MoverDerecha(ElementoActual);
 
 			ElementoActual = anterior;
+
+			//Si no hay elementos escondidos a la derecha, apaga la señar en la interfaz
+			if(ElementoActual.Previous != null){
+				if(ElementoActual.Previous.Previous == null)
+					Flecha.SetActive(false);
+			}
 		}
 		else
 			Debug.Log("Primer elemento");
