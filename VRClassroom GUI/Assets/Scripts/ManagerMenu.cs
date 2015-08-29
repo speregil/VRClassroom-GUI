@@ -53,7 +53,7 @@ public class ManagerMenu : MonoBehaviour {
 	public void Agregar(){
 
 		GameObject instantElement = (GameObject)Instantiate (ElementoMenu);
-		instantElement.transform.SetParent(ScrollPanel.transform);
+		instantElement.transform.SetParent(ScrollPanel.transform, false);
 		instantElement.transform.localPosition = PosInicial;
 		instantElement.transform.localScale = EscalaInicial;
 		ListaElementos.AddLast(instantElement);
