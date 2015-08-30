@@ -12,7 +12,8 @@ public class ManagerDetail : MonoBehaviour {
 	private 	LinkedList<GameObject>			ListaElementos;
 	private		Vector3[]						PosicionesPanel;
 	private		int								IndicePos;
-	private		LinkedListNode<GameObject>[]	ColumnaActual;
+	private		LinkedListNode<GameObject>		PrimerElemento;
+	private		LinkedListNode<GameObject>		UltimoElemento;
 
 	// Use this for initialization
 	void Start () {
@@ -37,8 +38,6 @@ public class ManagerDetail : MonoBehaviour {
 		initial.y = initial.y - altura - 80;
 		PosicionesPanel [5] = initial;
 		IndicePos = 0;
-
-		ColumnaActual = new LinkedListNode<GameObject>[2];
 	}
 	
 	public void AgregarTema(){
@@ -51,11 +50,11 @@ public class ManagerDetail : MonoBehaviour {
 		ListaElementos.AddLast (nuevoTema);
 
 		if (IndicePos == 0) {
-			ColumnaActual [0] = ListaElementos.Last;
+			PrimerElemento = ListaElementos.Last;
 			nuevoTema.transform.localPosition = PosicionesPanel[IndicePos];
 			IndicePos++;
-		} else if (IndicePos == 1) {
-			ColumnaActual [1] = ListaElementos.Last;
+		} else if (IndicePos == 5) {
+			UltimoElemento = ListaElementos.Last;
 			nuevoTema.transform.localPosition = PosicionesPanel[IndicePos];
 			IndicePos++;
 		} else if (IndicePos > 5) {
@@ -64,8 +63,6 @@ public class ManagerDetail : MonoBehaviour {
 			nuevoTema.transform.localPosition = PosicionesPanel[IndicePos];
 			IndicePos++;
 		}
-
-
 	}
 
 	public void AgregarElemento(){
@@ -78,30 +75,27 @@ public class ManagerDetail : MonoBehaviour {
 		ListaElementos.AddLast (nuevoTema);
 
 		if (IndicePos == 0) {
-			ColumnaActual [0] = ListaElementos.Last;
+			PrimerElemento = ListaElementos.Last;
 			nuevoTema.transform.localPosition = PosicionesPanel[IndicePos];
 			IndicePos++;
-		} else if (IndicePos == 1) {
-			ColumnaActual [1] = ListaElementos.Last;
+		} else if (IndicePos == 5) {
+			UltimoElemento = ListaElementos.Last;
 			nuevoTema.transform.localPosition = PosicionesPanel[IndicePos];
 			IndicePos++;
-		}
-		else if (IndicePos > 5)
+		} else if (IndicePos > 5) {
 			nuevoTema.SetActive (false);
-		else{
+		}else{
 			nuevoTema.transform.localPosition = PosicionesPanel[IndicePos];
 			IndicePos++;
 		}
-
-
 	}
 
 	public void Avanzar(){
 
-		ColumnaActual [0].Value.SetActive (false);
-		ColumnaActual [1].Value.SetActive (false);
+		PrimerElemento.Value.SetActive (false);
+		PrimerElemento.Next.Value.SetActive (false);
 
-		MoverIzquierda (ColumnaActual [1].Next, 0);
+		MoverIzquierda (PrimerElemento.Next.Next, 0);
 
 	}
 
@@ -111,12 +105,37 @@ public class ManagerDetail : MonoBehaviour {
 		elemento.Value.transform.localPosition = PosicionesPanel [pos];
 
 		if (pos == 0)
-			ColumnaActual [0] = elemento;
-		else if (pos == 1)
-			ColumnaActual [1] = elemento;
+			PrimerElemento = elemento;
+		else if (pos == 5)
+			UltimoElemento = elemento;
 
-		if (siguiente != null)
-			MoverIzquierda (siguiente, pos + 1);
+		if (pos < 5) {
+			if (siguiente != null)
+				MoverIzquierda (siguiente, pos + 1);
+		}
+	}
+
+	public void Retroceder(){
+		UltimoElemento.Value.SetActive (false);
+		UltimoElemento.Previous.Value.SetActive (false);
+		
+		MoverDerecha (UltimoElemento.Previous.Previous, 5);
+	}
+
+	public void MoverDerecha(LinkedListNode<GameObject> elemento, int pos){
+		LinkedListNode<GameObject> anterior = elemento.Previous;
+		elemento.Value.SetActive (true);
+		elemento.Value.transform.localPosition = PosicionesPanel [pos];
+		
+		if (pos == 0)
+			PrimerElemento = elemento;
+		else if (pos == 5)
+			UltimoElemento = elemento;
+		
+		if (pos > 0) {
+			if (anterior != null)
+				MoverDerecha (anterior, pos - 1);
+		}
 	}
 
 	public void DibujarLista(){
