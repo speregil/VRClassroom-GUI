@@ -4,7 +4,6 @@ using System.Collections.Generic;
 public class ManagerDetail : MonoBehaviour {
 
 	public  	GameObject						PrefElemento;
-	public  	GameObject						PrefTema;
 	public  	GameObject						FlechaAdelante;
 	public  	GameObject						FlechaAtras;
 	public		GameObject						PanelItems;
@@ -40,8 +39,7 @@ public class ManagerDetail : MonoBehaviour {
 		IndicePos = 0;
 	}
 	
-	public void AgregarTema(){
-		GameObject nuevoTema = (GameObject)Instantiate (PrefTema);
+	public void AgregarTema(GameObject nuevoTema){
 		nuevoTema.transform.SetParent(PanelItems.transform, false);
 
 		RectTransform rt = nuevoTema.GetComponent<RectTransform> ();
@@ -53,20 +51,17 @@ public class ManagerDetail : MonoBehaviour {
 			PrimerElemento = ListaElementos.Last;
 			nuevoTema.transform.localPosition = PosicionesPanel[IndicePos];
 			IndicePos++;
-		} else if (IndicePos == 5) {
-			UltimoElemento = ListaElementos.Last;
-			nuevoTema.transform.localPosition = PosicionesPanel[IndicePos];
-			IndicePos++;
 		} else if (IndicePos > 5) {
 			nuevoTema.SetActive (false);
-		}else{
+			FlechaAdelante.SetActive(true);
+		}else {
+			UltimoElemento = ListaElementos.Last;
 			nuevoTema.transform.localPosition = PosicionesPanel[IndicePos];
 			IndicePos++;
 		}
 	}
 
-	public void AgregarElemento(){
-		GameObject nuevoTema = (GameObject)Instantiate (PrefElemento);
+	public void AgregarElemento(GameObject nuevoTema){
 		nuevoTema.transform.SetParent(PanelItems.transform, false);
 		
 		RectTransform rt = nuevoTema.GetComponent<RectTransform> ();
@@ -78,13 +73,11 @@ public class ManagerDetail : MonoBehaviour {
 			PrimerElemento = ListaElementos.Last;
 			nuevoTema.transform.localPosition = PosicionesPanel[IndicePos];
 			IndicePos++;
-		} else if (IndicePos == 5) {
-			UltimoElemento = ListaElementos.Last;
-			nuevoTema.transform.localPosition = PosicionesPanel[IndicePos];
-			IndicePos++;
 		} else if (IndicePos > 5) {
 			nuevoTema.SetActive (false);
-		}else{
+			FlechaAdelante.SetActive(true);
+		}else {
+			UltimoElemento = ListaElementos.Last;
 			nuevoTema.transform.localPosition = PosicionesPanel[IndicePos];
 			IndicePos++;
 		}
@@ -93,9 +86,9 @@ public class ManagerDetail : MonoBehaviour {
 	public void Avanzar(){
 
 		PrimerElemento.Value.SetActive (false);
-		PrimerElemento.Next.Value.SetActive (false);
+		FlechaAtras.SetActive (true); 
 
-		MoverIzquierda (PrimerElemento.Next.Next, 0);
+		MoverIzquierda (PrimerElemento.Next, 0);
 
 	}
 
@@ -106,20 +99,23 @@ public class ManagerDetail : MonoBehaviour {
 
 		if (pos == 0)
 			PrimerElemento = elemento;
-		else if (pos == 5)
+		else
 			UltimoElemento = elemento;
 
 		if (pos < 5) {
 			if (siguiente != null)
 				MoverIzquierda (siguiente, pos + 1);
+		} else if (siguiente == null) {
+			FlechaAdelante.SetActive (false);
 		}
 	}
 
 	public void Retroceder(){
 		UltimoElemento.Value.SetActive (false);
-		UltimoElemento.Previous.Value.SetActive (false);
+		//UltimoElemento.Previous.Value.SetActive (false);
+		FlechaAdelante.SetActive (true);
 		
-		MoverDerecha (UltimoElemento.Previous.Previous, 5);
+		MoverDerecha (UltimoElemento.Previous, 5);
 	}
 
 	public void MoverDerecha(LinkedListNode<GameObject> elemento, int pos){
@@ -127,14 +123,16 @@ public class ManagerDetail : MonoBehaviour {
 		elemento.Value.SetActive (true);
 		elemento.Value.transform.localPosition = PosicionesPanel [pos];
 		
-		if (pos == 0)
-			PrimerElemento = elemento;
-		else if (pos == 5)
+		if (pos == 5)
 			UltimoElemento = elemento;
+		else
+			PrimerElemento = elemento;
 		
 		if (pos > 0) {
 			if (anterior != null)
 				MoverDerecha (anterior, pos - 1);
+		} else if (anterior == null) {
+			FlechaAtras.SetActive (false);
 		}
 	}
 

@@ -6,13 +6,15 @@ public class Elemento : MonoBehaviour {
 	public	string		Nombre;
 	public	string		Descripcion;
 	public	bool		Completado;
+	public	bool		EnDetalle;
 
 	private	GameObject	PanelInfo;
 	
-	void Start () {
+	void Awake () {
 		Nombre = "SinNombre";
 		Descripcion = "SinDescripcion";
 		Completado = false;
+		EnDetalle = false;
 		PanelInfo = GameObject.Find ("InfoPanel");
 	}
 

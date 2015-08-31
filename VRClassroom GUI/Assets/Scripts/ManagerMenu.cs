@@ -50,9 +50,8 @@ public class ManagerMenu : MonoBehaviour {
 	 * Agrega un nuevo elemento al menu
 	 * Actualmente lo coloca en la ultima posicion de la lista
 	 * */
-	public void Agregar(){
+	public void Agregar(GameObject instantElement){
 
-		GameObject instantElement = (GameObject)Instantiate (ElementoMenu);
 		instantElement.transform.SetParent(ScrollPanel.transform, false);
 		instantElement.transform.localPosition = PosInicial;
 		instantElement.transform.localScale = EscalaInicial;
