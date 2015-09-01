@@ -11,22 +11,27 @@ public class Tema : MonoBehaviour{
 	public		int					NumElementos;
 	public		float				PorcentajeCompleto;
 	public		bool				EnDetalle;
+	public		bool				Seleccionado;
+	public		bool				PrimerClick;
+	public		List<GameObject>	Contenido;
+	public		Tema				TemaPadre;
 
-	private		List<GameObject>	Contenido;
 	private		GameObject			PanelInfo;
-	private		GameObject			PanelDetalle;
+	private		GameObject			MainCanvas;
 
 	void Awake (){
-		Debug.Log ("Nuevo tema");
 		Nombre = "SinNombre";
 		Autor = "SinAutor";
 		FechaCreacion = new DateTime(1991,8,22);
 		NumElementos = 0;
 		PorcentajeCompleto = 0.0f;
 		Contenido = new List<GameObject>();
+		TemaPadre = null;
 		PanelInfo = GameObject.Find ("InfoPanel");
-		PanelDetalle = GameObject.Find ("Canvas");
+		MainCanvas = GameObject.Find ("Canvas");
 		EnDetalle = false;
+		Seleccionado = false;
+		PrimerClick = false;
 	}
 
 	public void AgregarContenido(GameObject nuevoContenido){
@@ -40,7 +45,8 @@ public class Tema : MonoBehaviour{
 	}
 
 	public void AbrirContenido(){
-		ManagerDetail detalle = PanelDetalle.GetComponent<ManagerDetail> ();
+		ManagerDetail detalle = MainCanvas.GetComponent<ManagerDetail> ();
+		Seleccionado = true;
 		foreach (GameObject item in Contenido) {
 			Tema esTema = item.GetComponent<Tema>();
 			Elemento esElemento = item.GetComponent<Elemento>();
@@ -53,12 +59,26 @@ public class Tema : MonoBehaviour{
 				detalle.AgregarElemento(item);
 			}
 		}
+
+		MostrarInfo ();
+	}
+
+	public void	BajarNivel(){
+		ManagerMenu menu = MainCanvas.GetComponent<ManagerMenu> ();
+		menu.BajarNivel (TemaPadre);
 	}
 
 	public void EnClick(){
-		if (EnDetalle)
+
+		if (PrimerClick) {
+			BajarNivel();
+		}
+		else if (EnDetalle) {
 			MostrarInfo ();
-		else{
+			PrimerClick = true;
+			EnDetalle = false;
+		}
+		else if(!Seleccionado){
 			AbrirContenido ();
 		}
 	}

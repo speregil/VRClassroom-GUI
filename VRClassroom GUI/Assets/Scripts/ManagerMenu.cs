@@ -11,17 +11,18 @@ public class ManagerMenu : MonoBehaviour {
 	// Atributos
 	//---------------------------------------------------------------------------------
 
-	public  	GameObject					ElementoMenu;  			//Prefab de un elemento del menu
-	public		GameObject					ScrollPanel;			//Panel que contiene los elementos
-	public		GameObject					Flecha;					//Icono que muestra que hay mas objetos escondidos hacia la derecha;
-	public		float						DistanciaElementos;		//Distancia entre los elementos del menu
-	public		float						CambioEscala; 			//Cambio en la escala de los distintos elementos a lo largo de la horizontal
+	public  	GameObject						ElementoMenu;  			//Prefab de un elemento del menu
+	public		GameObject						ScrollPanel;			//Panel que contiene los elementos
+	public		GameObject						Flecha;					//Icono que muestra que hay mas objetos escondidos hacia la derecha;
+	public		float							DistanciaElementos;		//Distancia entre los elementos del menu
+	public		float							CambioEscala; 			//Cambio en la escala de los distintos elementos a lo largo de la horizontal
 
-	private 	LinkedList<GameObject>		ListaElementos;			//Lista logica que contiene y maneja los elementos
-	private 	LinkedListNode<GameObject>	ElementoActual;			//Elemento que el usuario ve actualmente
-	private		Vector3						EscalaInicial;    		//Determina la escala en que se dibujara un nuevo elemento que se agregue
-	private		Vector3						PosInicial;  			//Determina la posicion donde se dibujara un nuevo elemento que se agregue
-	private		float						SaltoElemento;			//Valor real que separa dos elementos (ancho del boton + DistanciaElementos)
+	private		Stack<LinkedList<GameObject>>	PilaListas;
+	private 	LinkedList<GameObject>			ListaElementos;			//Lista logica que contiene y maneja los elementos
+	private 	LinkedListNode<GameObject>		ElementoActual;			//Elemento que el usuario ve actualmente
+	private		Vector3							EscalaInicial;    		//Determina la escala en que se dibujara un nuevo elemento que se agregue
+	private		Vector3							PosInicial;  			//Determina la posicion donde se dibujara un nuevo elemento que se agregue
+	private		float							SaltoElemento;			//Valor real que separa dos elementos (ancho del boton + DistanciaElementos)
 
 	//----------------------------------------------------------------------------------
 	// Inicializacion
@@ -31,7 +32,9 @@ public class ManagerMenu : MonoBehaviour {
 
 		// Inicializa los atributos con sus valores por defecto y de primer uso
 
+		PilaListas = new Stack<LinkedList<GameObject>> ();
 		ListaElementos = new LinkedList<GameObject> ();
+		PilaListas.Push (ListaElementos);
 		ElementoActual = null;
 
 		PosInicial = ScrollPanel.transform.localPosition;
@@ -207,5 +210,30 @@ public class ManagerMenu : MonoBehaviour {
 			EscalaInicial.x /= CambioEscala;
 			EscalaInicial.y /= CambioEscala;
 		}
-	}	
+	}
+
+	public void BajarNivel(Tema temaPadre){
+		List<GameObject> nuevoContenido = temaPadre.Contenido;
+		LimpiarMenu ();
+		foreach (GameObject item in nuevoContenido) {
+			Tema actual = item.GetComponent<Tema>();
+			if(actual !=null){
+				Agregar(item);
+			}
+		}
+		PilaListas.Push (ListaElementos);
+	}
+
+	public void LimpiarMenu(){
+		foreach (GameObject nodo in ListaElementos) {
+			nodo.SetActive(false);
+		}
+
+		ListaElementos = new LinkedList<GameObject> ();
+		PosInicial = ScrollPanel.transform.localPosition;
+		RectTransform rt = ElementoMenu.GetComponent<RectTransform> ();
+		float width = rt.rect.width;
+		PosInicial.x = PosInicial.x + (width * -4);
+		EscalaInicial = new Vector3 (1.0f, 1.0f, 1.0f);
+	}
 }
