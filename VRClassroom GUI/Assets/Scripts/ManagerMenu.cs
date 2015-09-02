@@ -56,12 +56,18 @@ public class ManagerMenu : MonoBehaviour {
 	public void Agregar(GameObject instantElement){
 
 		instantElement.transform.SetParent(ScrollPanel.transform, false);
+		RectTransform rt = instantElement.GetComponent<RectTransform> ();
+		rt.sizeDelta = new Vector2 (185, 185);
 		instantElement.transform.localPosition = PosInicial;
 		instantElement.transform.localScale = EscalaInicial;
+
 		ListaElementos.AddLast(instantElement);
 
-		if(ListaElementos.Count == 1)
+		if (ListaElementos.Count == 1) {
 			ElementoActual = ListaElementos.First;
+			Tema nuevoActual = ListaElementos.First.Value.GetComponent<Tema>();
+			nuevoActual.EsActual = true;
+		}
 
 		NuevoElemento();
 	}
@@ -96,11 +102,15 @@ public class ManagerMenu : MonoBehaviour {
 
 			Image imgComp = elemActual.GetComponent<Image> ();
 			imgComp.color = Color.blue;
+			Tema mTema = elemActual.GetComponent<Tema>();
+			mTema.EsActual = false;
 
 			// Selecciona el siguiente elemento
 			imgComp = siguiente.Value.GetComponent<Image> ();
 			imgComp.color = Color.red;
 			ElementoActual = siguiente;
+			mTema = ElementoActual.Value.GetComponent<Tema>();
+			mTema.EsActual = true;
 
 			//Si hay mas elementos a la derecha, activa la indicacion visual
 			if(ElementoActual.Previous != null){
@@ -167,11 +177,15 @@ public class ManagerMenu : MonoBehaviour {
 			//Des-selecciona el elemento actual
 			imgComp = elemActual.GetComponent<Image> ();
 			imgComp.color = Color.blue;
+			Tema mTema = elemActual.GetComponent<Tema>();
+			mTema.EsActual = false;
 
 			//Mueve recursivamente todo el menu hacia la derecha
 			MoverDerecha(ElementoActual);
 
 			ElementoActual = anterior;
+			mTema = ElementoActual.Value.GetComponent<Tema>();
+			mTema.EsActual = true;
 
 			//Si no hay elementos escondidos a la derecha, apaga la señar en la interfaz
 			if(ElementoActual.Previous != null){
@@ -218,6 +232,27 @@ public class ManagerMenu : MonoBehaviour {
 		foreach (GameObject item in nuevoContenido) {
 			Tema actual = item.GetComponent<Tema>();
 			if(actual !=null){
+				item.SetActive(true);
+				actual.EnDetalle = false;
+				actual.PrimerClick = false;
+				Agregar(item);
+			}
+		}
+		PilaListas.Push (ListaElementos);
+	}
+
+	public void SubirNivel(){
+		PilaListas.Pop ();
+		LimpiarMenu ();
+		ManagerDetail md = this.gameObject.GetComponent<ManagerDetail> ();
+		md.LimpiarDetalle ();
+		LinkedList<GameObject> nuevoContenido = PilaListas.Pop();
+		foreach (GameObject item in nuevoContenido) {
+			Tema actual = item.GetComponent<Tema>();
+			if(actual !=null){
+				item.SetActive(true);
+				actual.EnDetalle = false;
+				actual.PrimerClick = false;
 				Agregar(item);
 			}
 		}

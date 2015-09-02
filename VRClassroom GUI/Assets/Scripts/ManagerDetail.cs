@@ -136,7 +136,13 @@ public class ManagerDetail : MonoBehaviour {
 		}
 	}
 
-	public void DibujarLista(){
-
+	public void LimpiarDetalle(){
+		foreach (GameObject item in ListaElementos) {
+			item.SetActive(false);
+		}
+		ListaElementos = new LinkedList<GameObject> ();
+		PrimerElemento = null;
+		UltimoElemento = null;
+		IndicePos = 0;
 	}
 }

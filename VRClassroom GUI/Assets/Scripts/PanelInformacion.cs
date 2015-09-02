@@ -73,4 +73,9 @@ public class PanelInformacion : MonoBehaviour {
 		DescripcionElemento.SetActive (activar);
 		ToogleCompletado.SetActive (activar);
 	}
+
+	public void LimpiarInfo(){
+		ActivarInfoElemento (false);
+		ActivarInfoTema (false);
+	}
 }

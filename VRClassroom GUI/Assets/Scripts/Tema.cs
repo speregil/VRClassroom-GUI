@@ -10,6 +10,7 @@ public class Tema : MonoBehaviour{
 	public		DateTime			FechaCreacion;
 	public		int					NumElementos;
 	public		float				PorcentajeCompleto;
+	public		bool				EsActual;
 	public		bool				EnDetalle;
 	public		bool				Seleccionado;
 	public		bool				PrimerClick;
@@ -29,6 +30,7 @@ public class Tema : MonoBehaviour{
 		TemaPadre = null;
 		PanelInfo = GameObject.Find ("InfoPanel");
 		MainCanvas = GameObject.Find ("Canvas");
+		EsActual = false;
 		EnDetalle = false;
 		Seleccionado = false;
 		PrimerClick = false;
@@ -46,8 +48,9 @@ public class Tema : MonoBehaviour{
 
 	public void AbrirContenido(){
 		ManagerDetail detalle = MainCanvas.GetComponent<ManagerDetail> ();
-		Seleccionado = true;
+		detalle.LimpiarDetalle ();
 		foreach (GameObject item in Contenido) {
+			item.SetActive(true);
 			Tema esTema = item.GetComponent<Tema>();
 			Elemento esElemento = item.GetComponent<Elemento>();
 
@@ -65,21 +68,29 @@ public class Tema : MonoBehaviour{
 
 	public void	BajarNivel(){
 		ManagerMenu menu = MainCanvas.GetComponent<ManagerMenu> ();
+		PrimerClick = false;
+		EnDetalle = false;
+		ManagerDetail detalle = MainCanvas.GetComponent<ManagerDetail> ();
+		detalle.LimpiarDetalle ();
+		PanelInformacion panel = PanelInfo.GetComponent<PanelInformacion> ();
+		panel.LimpiarInfo ();
 		menu.BajarNivel (TemaPadre);
+		AbrirContenido ();
 	}
 
 	public void EnClick(){
-
-		if (PrimerClick) {
-			BajarNivel();
+		if (EnDetalle) {
+			if(PrimerClick){
+				BajarNivel();
+			}
+			else{
+				MostrarInfo();
+				PrimerClick = true;
+			}
+		} else {
+			if(EsActual){
+				AbrirContenido();
+			}
 		}
-		else if (EnDetalle) {
-			MostrarInfo ();
-			PrimerClick = true;
-			EnDetalle = false;
-		}
-		else if(!Seleccionado){
-			AbrirContenido ();
-		}
-	}
+	}	
 }
