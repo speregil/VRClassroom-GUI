@@ -37,7 +37,23 @@ public class Tema : MonoBehaviour{
 	}
 
 	public void AgregarContenido(GameObject nuevoContenido){
-		Contenido.Add (nuevoContenido);
+		Elemento esElemento = nuevoContenido.GetComponent<Elemento>();
+
+		if (esElemento != null)
+			Contenido.Add (nuevoContenido);
+		else {
+			GameObject ultimoTema = Contenido.FindLast(
+				delegate(GameObject go){
+				Tema mt = go.GetComponent<Tema>();
+				return mt != null;
+				});
+			if(ultimoTema != null){
+				int i = Contenido.IndexOf(ultimoTema);
+				Contenido.Insert(i, nuevoContenido);
+			}
+			else
+				Contenido.Add(nuevoContenido);
+		}
 		NumElementos++;
 	}
 
@@ -49,12 +65,14 @@ public class Tema : MonoBehaviour{
 	public void AbrirContenido(){
 		ManagerDetail detalle = MainCanvas.GetComponent<ManagerDetail> ();
 		detalle.LimpiarDetalle ();
+		ManagerMenu menu = MainCanvas.GetComponent<ManagerMenu> ();
 		foreach (GameObject item in Contenido) {
 			item.SetActive(true);
 			Tema esTema = item.GetComponent<Tema>();
 			Elemento esElemento = item.GetComponent<Elemento>();
 
 			if(esTema != null){
+				menu.SeleccionarItem(item, false);
 				esTema.EnDetalle = true;
 				detalle.AgregarTema(item);
 			}else{

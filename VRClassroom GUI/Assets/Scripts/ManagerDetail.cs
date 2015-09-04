@@ -40,8 +40,9 @@ public class ManagerDetail : MonoBehaviour {
 	}
 	
 	public void AgregarTema(GameObject nuevoTema){
-		nuevoTema.transform.SetParent(PanelItems.transform, false);
 
+		nuevoTema.transform.SetParent(PanelItems.transform, false);
+		nuevoTema.transform.localScale = new Vector3 (1.0f, 1.0f, 1.0f);
 		RectTransform rt = nuevoTema.GetComponent<RectTransform> ();
 		rt.sizeDelta = new Vector2 (120, 120);
 

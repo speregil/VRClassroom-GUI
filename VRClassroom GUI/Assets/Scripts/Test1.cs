@@ -15,47 +15,85 @@ public class Test1 : MonoBehaviour {
 	public void OnTest(){
 		GameObject canvas = GameObject.Find ("Canvas");
 		ManagerMenu menu = canvas.GetComponent<ManagerMenu> ();
+		ManagerEdition edition = canvas.GetComponent<ManagerEdition> ();
 
-		GameObject nuevoTema = GameObject.Instantiate (PrefTema);
-
+		GameObject nuevoTema = edition.CrearTema ("Tema1", "Autor1", new DateTime (2015, 8, 31));
 		Tema mainTema = nuevoTema.GetComponent<Tema> ();
-		mainTema.Autor = "Autor1";
-		mainTema.FechaCreacion = new DateTime (2015, 8, 31);
-		mainTema.Nombre = "Tema 1";
 
-		GameObject childTema = GameObject.Instantiate (PrefTema);
+		GameObject childTema = edition.CrearTema ("Tema1.1", "Autor1.1", new DateTime (2015, 8, 31));
 		Tema chTema = childTema.GetComponent<Tema> ();
-		chTema.Autor = "Autor1.1";
-		chTema.FechaCreacion = new DateTime (2015, 8, 31);
-		chTema.Nombre = "Tema 1.1";
 		chTema.TemaPadre = mainTema;
 		mainTema.AgregarContenido (childTema);
 
-		childTema = GameObject.Instantiate (PrefTema);
-		chTema = childTema.GetComponent<Tema> ();
-		chTema.Autor = "Autor1.2";
-		chTema.FechaCreacion = new DateTime (2015, 9, 1);
-		chTema.Nombre = "Tema 1.2";
-		chTema.TemaPadre = mainTema;
-		mainTema.AgregarContenido (childTema);
-
-		GameObject childElemento = GameObject.Instantiate (PrefElemento);
+		GameObject childElemento = edition.CrearElemento("Elemento1.1", "Descripcion1.1");
 		Elemento mainElemento = childElemento.GetComponent<Elemento> ();
-		mainElemento.Nombre = "Elemento1.1";
-		mainElemento.Descripcion = "Descripcion1.1";
+		mainTema.AgregarContenido (childElemento);
+		
+		childElemento = edition.CrearElemento("Elemento1.1.1", "Descripcion1.1.1");
+		mainElemento = childElemento.GetComponent<Elemento> ();
+		chTema.AgregarContenido (childElemento);
+		
+		childElemento = edition.CrearElemento("Elemento1.1.2", "Descripcion1.1.2");
+		mainElemento = childElemento.GetComponent<Elemento> ();
+		chTema.AgregarContenido (childElemento);
+
+		childTema = edition.CrearTema ("Tema 1.2", "Autor1.2", new DateTime (2015, 9, 1));
+		chTema = childTema.GetComponent<Tema> ();
+		chTema.TemaPadre = mainTema;
+		mainTema.AgregarContenido (childTema);
+
+		childElemento = edition.CrearElemento("Elemento1.2.1", "Descripcion1.2.1");
+		mainElemento = childElemento.GetComponent<Elemento> ();
+		chTema.AgregarContenido (childElemento);
+
+		menu.Agregar (nuevoTema);
+
+
+
+		nuevoTema = edition.CrearTema ("Tema2", "Autor2", new DateTime (2015, 9, 4));
+		mainTema = nuevoTema.GetComponent<Tema> ();
+
+		childTema = edition.CrearTema ("Tema2.1", "Autor2.1", new DateTime (2015, 9, 4));
+		chTema = childTema.GetComponent<Tema> ();
+		chTema.TemaPadre = mainTema;
+		mainTema.AgregarContenido (childTema);
+
+		childTema = edition.CrearTema ("Tema2.2", "Autor2.", new DateTime (2015, 9, 4));
+		chTema = childTema.GetComponent<Tema> ();
+		chTema.TemaPadre = mainTema;
+		mainTema.AgregarContenido (childTema);
+
+		childTema = edition.CrearTema ("Tema2.3", "Autor2.3", new DateTime (2015, 9, 4));
+		chTema = childTema.GetComponent<Tema> ();
+		chTema.TemaPadre = mainTema;
+		mainTema.AgregarContenido (childTema);
+
+		childTema = edition.CrearTema ("Tema2.4", "Autor2.4", new DateTime (2015, 9, 4));
+		chTema = childTema.GetComponent<Tema> ();
+		chTema.TemaPadre = mainTema;
+		mainTema.AgregarContenido (childTema);
+
+		childTema = edition.CrearTema ("Tema2.5", "Autor2.5", new DateTime (2015, 9, 4));
+		chTema = childTema.GetComponent<Tema> ();
+		chTema.TemaPadre = mainTema;
+		mainTema.AgregarContenido (childTema);
+
+		childTema = edition.CrearTema ("Tema2.6", "Autor2.6", new DateTime (2015, 9, 4));
+		chTema = childTema.GetComponent<Tema> ();
+		chTema.TemaPadre = mainTema;
+		mainTema.AgregarContenido (childTema);
+
+		childElemento = edition.CrearElemento("Elemento2.1", "Descripcion2.1");
+		mainElemento = childElemento.GetComponent<Elemento> ();
 		mainTema.AgregarContenido (childElemento);
 
-		childElemento = GameObject.Instantiate (PrefElemento);
+		childElemento = edition.CrearElemento("Elemento2.2", "Descripcion2.2");
 		mainElemento = childElemento.GetComponent<Elemento> ();
-		mainElemento.Nombre = "Elemento1.1.1";
-		mainElemento.Descripcion = "Descripcion1.1.1";
-		chTema.AgregarContenido (childElemento);
+		mainTema.AgregarContenido (childElemento);
 
-		childElemento = GameObject.Instantiate (PrefElemento);
+		childElemento = edition.CrearElemento("Elemento2.3", "Descripcion2.3");
 		mainElemento = childElemento.GetComponent<Elemento> ();
-		mainElemento.Nombre = "Elemento1.1.2";
-		mainElemento.Descripcion = "Descripcion1.1.2";
-		chTema.AgregarContenido (childElemento);
+		mainTema.AgregarContenido (childElemento);
 
 		menu.Agregar (nuevoTema);
 	}

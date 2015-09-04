@@ -77,8 +77,7 @@ public class ManagerMenu : MonoBehaviour {
 	 * elemento agregado
 	 * */
 	public void NuevoElemento(){
-		Image imgComp = ElementoActual.Value.GetComponent<Image> ();
-		imgComp.color = Color.red;
+		SeleccionarItem (ElementoActual.Value, true);
 		PosInicial.x += SaltoElemento;
 		EscalaInicial.x /= CambioEscala;
 		EscalaInicial.y /= CambioEscala;
@@ -100,18 +99,11 @@ public class ManagerMenu : MonoBehaviour {
 			nuevaEscala.y /= CambioEscala;
 			elemActual.transform.localScale = nuevaEscala;
 
-			Image imgComp = elemActual.GetComponent<Image> ();
-			imgComp.color = Color.blue;
-			Tema mTema = elemActual.GetComponent<Tema>();
-			mTema.EsActual = false;
+			SeleccionarItem(elemActual, false);
 
 			// Selecciona el siguiente elemento
-			imgComp = siguiente.Value.GetComponent<Image> ();
-			imgComp.color = Color.red;
+			SeleccionarItem(siguiente.Value, true);
 			ElementoActual = siguiente;
-			mTema = ElementoActual.Value.GetComponent<Tema>();
-			mTema.EsActual = true;
-
 			//Si hay mas elementos a la derecha, activa la indicacion visual
 			if(ElementoActual.Previous != null){
 				if(ElementoActual.Previous.Previous != null)
@@ -171,21 +163,15 @@ public class ManagerMenu : MonoBehaviour {
 			nuevaEscala.y *= CambioEscala;
 			anterior.Value.transform.localScale = nuevaEscala;
 
-			Image imgComp = anterior.Value.GetComponent<Image> ();
-			imgComp.color = Color.red;
+			SeleccionarItem(anterior.Value, true);
 
 			//Des-selecciona el elemento actual
-			imgComp = elemActual.GetComponent<Image> ();
-			imgComp.color = Color.blue;
-			Tema mTema = elemActual.GetComponent<Tema>();
-			mTema.EsActual = false;
+			SeleccionarItem(elemActual, false);
 
 			//Mueve recursivamente todo el menu hacia la derecha
 			MoverDerecha(ElementoActual);
 
 			ElementoActual = anterior;
-			mTema = ElementoActual.Value.GetComponent<Tema>();
-			mTema.EsActual = true;
 
 			//Si no hay elementos escondidos a la derecha, apaga la señar en la interfaz
 			if(ElementoActual.Previous != null){
@@ -270,5 +256,19 @@ public class ManagerMenu : MonoBehaviour {
 		float width = rt.rect.width;
 		PosInicial.x = PosInicial.x + (width * -4);
 		EscalaInicial = new Vector3 (1.0f, 1.0f, 1.0f);
+	}
+
+	public void SeleccionarItem(GameObject item, bool seleccionar){
+		if (seleccionar) {
+			Image imgComp = item.GetComponent<Image> ();
+			imgComp.color = Color.red;
+			Tema mTema = item.GetComponent<Tema> ();
+			mTema.EsActual = true;
+		} else {
+			Image imgComp = item.GetComponent<Image> ();
+			imgComp.color = Color.blue;
+			Tema mTema = item.GetComponent<Tema> ();
+			mTema.EsActual = false;
+		}
 	}
 }
