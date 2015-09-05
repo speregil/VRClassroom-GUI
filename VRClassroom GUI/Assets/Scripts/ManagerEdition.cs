@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using	UnityEngine.UI;
 using System.Collections;
 using System;
 
@@ -18,6 +19,9 @@ public class ManagerEdition : MonoBehaviour {
 		mTema.Nombre = nNombre;
 		mTema.Autor = nAutor;
 		mTema.FechaCreacion = nFecha;
+
+		Text mText = nuevoTema.GetComponentInChildren<Text> ();
+		mText.text = nNombre;
 		return nuevoTema;
 	}
 
@@ -26,6 +30,9 @@ public class ManagerEdition : MonoBehaviour {
 		Elemento mElemento = nuevoElemento.GetComponent<Elemento> ();
 		mElemento.Nombre = nNombre;
 		mElemento.Descripcion = nDescripcion;
+
+		Text mText = nuevoElemento.GetComponentInChildren<Text> ();
+		mText.text = nNombre;
 		return nuevoElemento;
 	}
 }
