@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Collections;
 
 /**
  * Maneja todas las operaciones del menu principal horizontal
@@ -17,7 +18,9 @@ public class ManagerMenu : MonoBehaviour {
 	public		float							CambioEscala; 			//Cambio en la escala de los distintos elementos a lo largo de la horizontal
 	public		float							AnchoElementos;			//Ancho del prefab de los elemetos
 	public		float							velMovimiento;			//Velocidad a la que se desplazan los elementos al moverse
-	public 		float							primeraRotacion;		//Angulo de la primera rotacin que hacen los elementos al moverse hacia la izquierda
+	public 		float							velRotacion;
+	public 		float							primeraRotacion;		//Angulo de la primera rotacion que hacen los elementos al moverse hacia la izquierda
+	public 		float							segundaRotacion;
 	private		Stack<LinkedList<GameObject>>	PilaListas;				//Pila que maneja las distintas jerarquias del sistema de archivos
 	private 	LinkedList<GameObject>			ListaElementos;			//Lista logica que contiene y maneja los elementos
 	private 	LinkedListNode<GameObject>		ElementoActual;			//Elemento que el usuario ve actualmente
@@ -80,63 +83,54 @@ public class ManagerMenu : MonoBehaviour {
 		EscalaInicial.x /= CambioEscala;
 		EscalaInicial.y /= CambioEscala;
 	}
-
+	
 	/**
 	 * Mueve la seleccion actual del menu de a un elemento en direccion al final de la lista
 	 * */
 	public void Avanzar(){
 		GameObject elemActual = ElementoActual.Value;
+		LinkedListNode<GameObject> anterior = ElementoActual.Previous;
 		LinkedListNode<GameObject> siguiente = ElementoActual.Next;
 		if (siguiente != null) {
 			// Mueve hacia atras el elemento actual y lo des-selecciona
-			Vector3 nuevaPos = elemActual.transform.localPosition;
-			nuevaPos.x -= SaltoElemento;
-			Debug.Log("Prev pos: " + elemActual.transform.localPosition + "---NuevaPos: " + nuevaPos);
-			elemActual.transform.position = Vector3.Lerp(elemActual.transform.position, nuevaPos, velMovimiento*Time.deltaTime);
-			Vector3 nuevaEscala = elemActual.transform.localScale;
-			nuevaEscala.x /= CambioEscala;
-			nuevaEscala.y /= CambioEscala;
-			elemActual.transform.localScale = nuevaEscala;
 
 			SeleccionarItem(elemActual, false);
+
+			// Mueve todo el menu hacia la izquierda
+			GameObject[] objSiguientes = new GameObject[ListaElementos.Count];
+			ListaElementos.CopyTo(objSiguientes, 0);
+			foreach(GameObject actual in ListaElementos){
+				StartCoroutine(MoverIzquierda(actual));
+			}
+
+			StartCoroutine(RotarElemento(elemActual, primeraRotacion));
+
+			if(anterior !=null)
+				StartCoroutine(RotarElemento(ElementoActual.Previous.Value, segundaRotacion));
 
 			// Selecciona el siguiente elemento
 			SeleccionarItem(siguiente.Value, true);
 			ElementoActual = siguiente;
 
-			// Mueve recursivamente todo el menu hacia la izquierda
-			MoverIzquierda (siguiente);
-		}
-		else
-			Debug.Log("Ultimo elemento");
-	}
-
-	/**
-	 * Mueve todos los elementos hacia la izquierda de forma recursiva
-	 * a partir del elemento pasado por paramentro
-	 * */
-	public void MoverIzquierda(LinkedListNode<GameObject> elemento){
-		GameObject valor = elemento.Value;
-
-		//Mueve el elemento
-		Vector3 nuevaPos = valor.transform.localPosition;
-		nuevaPos.x -= SaltoElemento;
-		valor.transform.localPosition = Vector3.MoveTowards(valor.transform.localPosition, nuevaPos, velMovimiento*Time.deltaTime);
-		Vector3 nuevaEscala = valor.transform.localScale;
-		nuevaEscala.x *= CambioEscala;
-		nuevaEscala.y *= CambioEscala;
-		valor.transform.localScale = nuevaEscala;
-
-		//Llamado recursivo
-		LinkedListNode<GameObject> siguiente = elemento.Next;
-		if (siguiente != null) {
-			MoverIzquierda (siguiente);
-		} 
-		else {
-			//Si llego al final, ajusta el menu para poder recibir un elemento nuevo
 			PosInicial.x -= SaltoElemento;
 			EscalaInicial.x *= CambioEscala;
 			EscalaInicial.y *= CambioEscala;
+			
+		} else {
+			Debug.Log ("Ultimo elemento");
+		}
+	}
+
+	/**
+	 * Corutina que mueve hacia la izquierda un espacio el elemento pasado por parametro
+	 * */
+	public IEnumerator MoverIzquierda(GameObject elemento){
+		Vector3 nuevaPos = elemento.transform.position;
+		nuevaPos.x -= SaltoElemento;
+
+		while (Vector3.Distance(elemento.transform.position, nuevaPos) > 0.01f) {
+			elemento.transform.position = Vector3.MoveTowards (elemento.transform.position, nuevaPos, velMovimiento * Time.deltaTime);
+			yield return null;
 		}
 	}
 
@@ -146,63 +140,47 @@ public class ManagerMenu : MonoBehaviour {
 	public void Retroceder(){
 		GameObject elemActual = ElementoActual.Value;
 		LinkedListNode<GameObject> anterior = ElementoActual.Previous;
-
 		if (anterior != null) {
-			// Mueve hacia adelante el elemento anterior y lo selecciona
-			Vector3 nuevaPos = anterior.Value.transform.localPosition;
-			nuevaPos.x += SaltoElemento;
-			anterior.Value.transform.localPosition = nuevaPos;
-			Vector3 nuevaEscala = anterior.Value.transform.localScale;
-			nuevaEscala.x *= CambioEscala;
-			nuevaEscala.y *= CambioEscala;
-			anterior.Value.transform.localScale = nuevaEscala;
-
-			SeleccionarItem(anterior.Value, true);
-
-			//Des-selecciona el elemento actual
+			// Mueve hacia atras el elemento actual y lo des-selecciona
+			
 			SeleccionarItem(elemActual, false);
-
-			//Mueve recursivamente todo el menu hacia la derecha
-			MoverDerecha(ElementoActual);
-
+			
+			// Selecciona el siguiente elemento
+			SeleccionarItem(anterior.Value, true);
 			ElementoActual = anterior;
-
-			//Si no hay elementos escondidos a la derecha, apaga la señar en la interfaz
-			if(ElementoActual.Previous != null){
-				if(ElementoActual.Previous.Previous == null)
-					Flecha.SetActive(false);
+			
+			// Mueve todo el menu hacia la izquierda
+			foreach(GameObject actual in ListaElementos){
+				StartCoroutine(MoverDerecha(actual));
 			}
-		}
-		else
-			Debug.Log("Primer elemento");
-	}
-
-	/**
-	 * Mueve todos los elementos hacia la derecha de forma recursiva
-	 * a partir del elemento pasado por paramentro
-	 * */
-	public void MoverDerecha(LinkedListNode<GameObject> elemento){
-		GameObject valor = elemento.Value;
-
-		//Mueve el elemento
-		Vector3 nuevaPos = valor.transform.localPosition;
-		nuevaPos.x += SaltoElemento;
-		valor.transform.localPosition = nuevaPos;
-		Vector3 nuevaEscala = valor.transform.localScale;
-		nuevaEscala.x /= CambioEscala;
-		nuevaEscala.y /= CambioEscala;
-		valor.transform.localScale = nuevaEscala;
-
-		//Llamado recursivo
-		LinkedListNode<GameObject> siguiente = elemento.Next;
-		if (siguiente != null) {
-			MoverDerecha (siguiente);
-		} 
-		else {
-			//Si llego al final, ajusta el menu para poder recibir un elemento nuevo
+			
 			PosInicial.x += SaltoElemento;
 			EscalaInicial.x /= CambioEscala;
 			EscalaInicial.y /= CambioEscala;
+			
+		} else {
+			Debug.Log ("Ultimo elemento");
+		}
+	}
+
+	/**
+	 * Corutina que mueve hacia la derecha un espacio el elemento pasado por parametro
+	 * */
+	public IEnumerator MoverDerecha(GameObject elemento){
+		Vector3 nuevaPos = elemento.transform.position;
+		nuevaPos.x += SaltoElemento;
+		
+		while (Vector3.Distance(elemento.transform.position, nuevaPos) > 0.01f) {
+			elemento.transform.position = Vector3.MoveTowards (elemento.transform.position, nuevaPos, velMovimiento * Time.deltaTime);
+			yield return null;
+		}
+	}
+
+	public IEnumerator RotarElemento(GameObject elemento, float rotacion){
+		Quaternion qTo = Quaternion.AngleAxis(rotacion, elemento.transform.up) * transform.rotation;
+		while (Quaternion.Angle(elemento.transform.rotation, qTo) > 0.01f) {
+			elemento.transform.rotation = Quaternion.RotateTowards (elemento.transform.rotation, qTo, velRotacion * Time.deltaTime);
+			yield return null;
 		}
 	}
 
