@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
-using	UnityEngine.UI;
 using System.Collections;
+using UnityEngine.UI;
 using System;
 
 public class ManagerEdition : MonoBehaviour {
@@ -22,6 +22,7 @@ public class ManagerEdition : MonoBehaviour {
 
 		Text mText = nuevoTema.GetComponentInChildren<Text> ();
 		mText.text = nNombre;
+
 		return nuevoTema;
 	}
 
@@ -33,6 +34,13 @@ public class ManagerEdition : MonoBehaviour {
 
 		Text mText = nuevoElemento.GetComponentInChildren<Text> ();
 		mText.text = nNombre;
+
 		return nuevoElemento;
+	}
+
+	public float GetPrefabWidth(){
+		GameObject testPrefab = GameObject.Instantiate (PrefTema);
+		RectTransform rt = testPrefab.GetComponent<RectTransform> ();
+		return rt.rect.width;
 	}
 }

@@ -10,14 +10,15 @@ public class ManagerMenu : MonoBehaviour {
 	//---------------------------------------------------------------------------------
 	// Atributos
 	//---------------------------------------------------------------------------------
-
-	public  	GameObject						ElementoMenu;  			//Prefab de un elemento del menu
+	
 	public		GameObject						ScrollPanel;			//Panel que contiene los elementos
 	public		GameObject						Flecha;					//Icono que muestra que hay mas objetos escondidos hacia la derecha;
 	public		float							DistanciaElementos;		//Distancia entre los elementos del menu
 	public		float							CambioEscala; 			//Cambio en la escala de los distintos elementos a lo largo de la horizontal
-
-	private		Stack<LinkedList<GameObject>>	PilaListas;
+	public		float							AnchoElementos;			//Ancho del prefab de los elemetos
+	public		float							velMovimiento;			//Velocidad a la que se desplazan los elementos al moverse
+	public 		float							primeraRotacion;		//Angulo de la primera rotacin que hacen los elementos al moverse hacia la izquierda
+	private		Stack<LinkedList<GameObject>>	PilaListas;				//Pila que maneja las distintas jerarquias del sistema de archivos
 	private 	LinkedList<GameObject>			ListaElementos;			//Lista logica que contiene y maneja los elementos
 	private 	LinkedListNode<GameObject>		ElementoActual;			//Elemento que el usuario ve actualmente
 	private		Vector3							EscalaInicial;    		//Determina la escala en que se dibujara un nuevo elemento que se agregue
@@ -36,18 +37,15 @@ public class ManagerMenu : MonoBehaviour {
 		ListaElementos = new LinkedList<GameObject> ();
 		PilaListas.Push (ListaElementos);
 		ElementoActual = null;
-
-		PosInicial = ScrollPanel.transform.localPosition;
-		RectTransform rt = ElementoMenu.GetComponent<RectTransform> ();
-		float width = rt.rect.width;
-		PosInicial.x = PosInicial.x + (width * -4);
-		SaltoElemento = width + DistanciaElementos;
-		EscalaInicial = new Vector3 (1.0f, 1.0f, 1.0f);
 	}
 
 	//-----------------------------------------------------------------------------------
 	// Metodos
 	//-----------------------------------------------------------------------------------
+
+	public void Update(){
+
+	}
 
 	/**
 	 * Agrega un nuevo elemento al menu
@@ -93,7 +91,8 @@ public class ManagerMenu : MonoBehaviour {
 			// Mueve hacia atras el elemento actual y lo des-selecciona
 			Vector3 nuevaPos = elemActual.transform.localPosition;
 			nuevaPos.x -= SaltoElemento;
-			elemActual.transform.localPosition = nuevaPos;
+			Debug.Log("Prev pos: " + elemActual.transform.localPosition + "---NuevaPos: " + nuevaPos);
+			elemActual.transform.position = Vector3.Lerp(elemActual.transform.position, nuevaPos, velMovimiento*Time.deltaTime);
 			Vector3 nuevaEscala = elemActual.transform.localScale;
 			nuevaEscala.x /= CambioEscala;
 			nuevaEscala.y /= CambioEscala;
@@ -104,11 +103,6 @@ public class ManagerMenu : MonoBehaviour {
 			// Selecciona el siguiente elemento
 			SeleccionarItem(siguiente.Value, true);
 			ElementoActual = siguiente;
-			//Si hay mas elementos a la derecha, activa la indicacion visual
-			if(ElementoActual.Previous != null){
-				if(ElementoActual.Previous.Previous != null)
-					Flecha.SetActive(true);
-			}
 
 			// Mueve recursivamente todo el menu hacia la izquierda
 			MoverIzquierda (siguiente);
@@ -127,7 +121,7 @@ public class ManagerMenu : MonoBehaviour {
 		//Mueve el elemento
 		Vector3 nuevaPos = valor.transform.localPosition;
 		nuevaPos.x -= SaltoElemento;
-		valor.transform.localPosition = nuevaPos;
+		valor.transform.localPosition = Vector3.MoveTowards(valor.transform.localPosition, nuevaPos, velMovimiento*Time.deltaTime);
 		Vector3 nuevaEscala = valor.transform.localScale;
 		nuevaEscala.x *= CambioEscala;
 		nuevaEscala.y *= CambioEscala;
@@ -251,11 +245,7 @@ public class ManagerMenu : MonoBehaviour {
 		}
 
 		ListaElementos = new LinkedList<GameObject> ();
-		PosInicial = ScrollPanel.transform.localPosition;
-		RectTransform rt = ElementoMenu.GetComponent<RectTransform> ();
-		float width = rt.rect.width;
-		PosInicial.x = PosInicial.x + (width * -4);
-		EscalaInicial = new Vector3 (1.0f, 1.0f, 1.0f);
+		SetParametrosIniciales ();
 	}
 
 	public void SeleccionarItem(GameObject item, bool seleccionar){
@@ -270,5 +260,11 @@ public class ManagerMenu : MonoBehaviour {
 			Tema mTema = item.GetComponent<Tema> ();
 			mTema.EsActual = false;
 		}
+	}
+
+	public void SetParametrosIniciales(){
+		PosInicial = ScrollPanel.transform.localPosition;
+		SaltoElemento = AnchoElementos + DistanciaElementos;
+		EscalaInicial = new Vector3 (1.0f, 1.0f, 1.0f);
 	}
 }
