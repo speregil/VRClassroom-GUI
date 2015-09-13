@@ -20,7 +20,7 @@ public class ManagerMenu : MonoBehaviour {
 	public		float							velMovimiento;			//Velocidad a la que se desplazan los elementos al moverse
 	public 		float							velRotacion;
 	public 		float							primeraRotacion;		//Angulo de la primera rotacion que hacen los elementos al moverse hacia la izquierda
-	public 		float							segundaRotacion;
+	public 		float							Desplazamiento;
 	private		Stack<LinkedList<GameObject>>	PilaListas;				//Pila que maneja las distintas jerarquias del sistema de archivos
 	private 	LinkedList<GameObject>			ListaElementos;			//Lista logica que contiene y maneja los elementos
 	private 	LinkedListNode<GameObject>		ElementoActual;			//Elemento que el usuario ve actualmente
@@ -60,7 +60,7 @@ public class ManagerMenu : MonoBehaviour {
 		RectTransform rt = instantElement.GetComponent<RectTransform> ();
 		rt.sizeDelta = new Vector2 (185, 185);
 		instantElement.transform.localPosition = PosInicial;
-		instantElement.transform.localScale = EscalaInicial;
+		//instantElement.transform.localScale = EscalaInicial;
 
 		ListaElementos.AddLast(instantElement);
 
@@ -80,8 +80,8 @@ public class ManagerMenu : MonoBehaviour {
 	public void NuevoElemento(){
 		SeleccionarItem (ElementoActual.Value, true);
 		PosInicial.x += SaltoElemento;
-		EscalaInicial.x /= CambioEscala;
-		EscalaInicial.y /= CambioEscala;
+		//EscalaInicial.x /= CambioEscala;
+		//EscalaInicial.y /= CambioEscala;
 	}
 	
 	/**
@@ -95,22 +95,27 @@ public class ManagerMenu : MonoBehaviour {
 			// Mueve hacia atras el elemento actual y lo des-selecciona
 
 			SeleccionarItem(elemActual, false);
+			MoverIzquierda(elemActual);
+			RotarElemento(elemActual, primeraRotacion);
 
-			// Mueve todo el menu hacia la izquierda
-			GameObject[] objSiguientes = new GameObject[ListaElementos.Count];
-			ListaElementos.CopyTo(objSiguientes, 0);
-			foreach(GameObject actual in ListaElementos){
-				StartCoroutine(MoverIzquierda(actual));
+			if(anterior != null){
+				MoverIzquierda(anterior.Value);
 			}
-
-			StartCoroutine(RotarElemento(elemActual, primeraRotacion));
-
-			if(anterior !=null)
-				StartCoroutine(RotarElemento(ElementoActual.Previous.Value, segundaRotacion));
 
 			// Selecciona el siguiente elemento
 			SeleccionarItem(siguiente.Value, true);
 			ElementoActual = siguiente;
+
+			while (siguiente != null){
+				MoverIzquierda(siguiente.Value);
+				siguiente = siguiente.Next;
+			}
+
+			while(anterior !=null){
+				ReducirEscala(anterior.Value);
+				MoverFrente(anterior.Value);
+				anterior = anterior.Previous;
+			}
 
 			PosInicial.x -= SaltoElemento;
 			EscalaInicial.x *= CambioEscala;
@@ -124,14 +129,29 @@ public class ManagerMenu : MonoBehaviour {
 	/**
 	 * Corutina que mueve hacia la izquierda un espacio el elemento pasado por parametro
 	 * */
-	public IEnumerator MoverIzquierda(GameObject elemento){
+	public void MoverIzquierda(GameObject elemento){
 		Vector3 nuevaPos = elemento.transform.position;
 		nuevaPos.x -= SaltoElemento;
+		iTween.MoveTo (elemento, nuevaPos,velMovimiento);
+	}
 
-		while (Vector3.Distance(elemento.transform.position, nuevaPos) > 0.01f) {
-			elemento.transform.position = Vector3.MoveTowards (elemento.transform.position, nuevaPos, velMovimiento * Time.deltaTime);
-			yield return null;
-		}
+	/**
+	 * Corutina que mueve hacia la izquierda un espacio el elemento pasado por parametro
+	 * */
+	public void MoverFrente(GameObject elemento){
+		Vector3 nuevaPos = elemento.transform.position;
+		nuevaPos.z -= SaltoElemento;
+		iTween.MoveTo (elemento, nuevaPos,velMovimiento);
+	}
+
+	/**
+	 * Corutina que mueve hacia la izquierda un espacio el elemento pasado por parametro
+	 * */
+	public void MoverAtras(GameObject elemento){
+		Debug.Log ("Atras");
+		Vector3 nuevaPos = elemento.transform.position;
+		nuevaPos.z += SaltoElemento;
+		iTween.MoveTo (elemento, nuevaPos,velMovimiento);
 	}
 
 	/**
@@ -140,18 +160,30 @@ public class ManagerMenu : MonoBehaviour {
 	public void Retroceder(){
 		GameObject elemActual = ElementoActual.Value;
 		LinkedListNode<GameObject> anterior = ElementoActual.Previous;
+		LinkedListNode<GameObject> siguiente = ElementoActual.Next;
 		if (anterior != null) {
 			// Mueve hacia atras el elemento actual y lo des-selecciona
 			
 			SeleccionarItem(elemActual, false);
+			MoverDerecha(elemActual);
+
+			MoverDerecha(anterior.Value);
+			RotarElemento(anterior.Value, 0);
 			
-			// Selecciona el siguiente elemento
+			// Selecciona el anterior elemento
 			SeleccionarItem(anterior.Value, true);
 			ElementoActual = anterior;
-			
-			// Mueve todo el menu hacia la izquierda
-			foreach(GameObject actual in ListaElementos){
-				StartCoroutine(MoverDerecha(actual));
+
+			while (siguiente != null){
+				MoverDerecha(siguiente.Value);
+				siguiente = siguiente.Next;
+			}
+
+			anterior = anterior.Previous;
+			while(anterior != null){
+				AumetarEscala(anterior.Value);
+				MoverAtras(anterior.Value);
+				anterior = anterior.Previous;
 			}
 			
 			PosInicial.x += SaltoElemento;
@@ -159,29 +191,36 @@ public class ManagerMenu : MonoBehaviour {
 			EscalaInicial.y /= CambioEscala;
 			
 		} else {
-			Debug.Log ("Ultimo elemento");
+			Debug.Log ("Primer elemento");
 		}
 	}
 
 	/**
 	 * Corutina que mueve hacia la derecha un espacio el elemento pasado por parametro
 	 * */
-	public IEnumerator MoverDerecha(GameObject elemento){
+	public void MoverDerecha(GameObject elemento){
 		Vector3 nuevaPos = elemento.transform.position;
 		nuevaPos.x += SaltoElemento;
-		
-		while (Vector3.Distance(elemento.transform.position, nuevaPos) > 0.01f) {
-			elemento.transform.position = Vector3.MoveTowards (elemento.transform.position, nuevaPos, velMovimiento * Time.deltaTime);
-			yield return null;
-		}
+		iTween.MoveTo (elemento, nuevaPos,velMovimiento);
 	}
 
-	public IEnumerator RotarElemento(GameObject elemento, float rotacion){
-		Quaternion qTo = Quaternion.AngleAxis(rotacion, elemento.transform.up) * transform.rotation;
-		while (Quaternion.Angle(elemento.transform.rotation, qTo) > 0.01f) {
-			elemento.transform.rotation = Quaternion.RotateTowards (elemento.transform.rotation, qTo, velRotacion * Time.deltaTime);
-			yield return null;
-		}
+	public void RotarElemento(GameObject elemento, float rotacion){
+		Vector3 rot = new Vector3 (0,rotacion,0);
+		iTween.RotateTo (elemento, rot, velRotacion);
+	}
+
+	public void ReducirEscala(GameObject elemento){
+		Vector3 nuevaEscala = elemento.transform.localScale;
+		nuevaEscala.x /= CambioEscala;
+		nuevaEscala.y /= CambioEscala;
+		elemento.transform.localScale = nuevaEscala;
+	}
+
+	public void AumetarEscala(GameObject elemento){
+		Vector3 nuevaEscala = elemento.transform.localScale;
+		nuevaEscala.x *= CambioEscala;
+		nuevaEscala.y *= CambioEscala;
+		elemento.transform.localScale = nuevaEscala;
 	}
 
 	public void BajarNivel(Tema temaPadre){
@@ -238,6 +277,13 @@ public class ManagerMenu : MonoBehaviour {
 			Tema mTema = item.GetComponent<Tema> ();
 			mTema.EsActual = false;
 		}
+	}
+
+	public void DesplazarMenu(int posicion){
+		Vector3 nuevaPos = ScrollPanel.transform.position;
+		nuevaPos.y += Desplazamiento;
+		//nuevaPos.z += Desplazamiento;
+		iTween.MoveTo (ScrollPanel, nuevaPos, velMovimiento);
 	}
 
 	public void SetParametrosIniciales(){

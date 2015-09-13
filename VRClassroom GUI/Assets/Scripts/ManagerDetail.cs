@@ -7,7 +7,8 @@ public class ManagerDetail : MonoBehaviour {
 	public  	GameObject						FlechaAdelante;
 	public  	GameObject						FlechaAtras;
 	public		GameObject						PanelItems;
-
+	public		GameObject						MenuDetalle;
+	public		float							Desplazamiento;
 	private 	LinkedList<GameObject>			ListaElementos;
 	private		Vector3[]						PosicionesPanel;
 	private		int								IndicePos;
@@ -37,6 +38,7 @@ public class ManagerDetail : MonoBehaviour {
 		initial.y = initial.y - altura - 80;
 		PosicionesPanel [5] = initial;
 		IndicePos = 0;
+
 	}
 	
 	public void AgregarTema(GameObject nuevoTema){
@@ -145,5 +147,12 @@ public class ManagerDetail : MonoBehaviour {
 		PrimerElemento = null;
 		UltimoElemento = null;
 		IndicePos = 0;
+	}
+
+	public void DesplazarMenu(int posicion){
+		Vector3 nuevaPos = MenuDetalle.transform.position;
+		nuevaPos.y += Desplazamiento;
+		//nuevaPos.z += Desplazamiento;
+		iTween.MoveTo (MenuDetalle, nuevaPos, 1);
 	}
 }

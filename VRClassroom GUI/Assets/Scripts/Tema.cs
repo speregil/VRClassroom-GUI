@@ -29,7 +29,7 @@ public class Tema : MonoBehaviour{
 		Contenido = new List<GameObject>();
 		TemaPadre = null;
 		PanelInfo = GameObject.Find ("InfoPanel");
-		MainCanvas = GameObject.Find ("Canvas");
+		MainCanvas = GameObject.Find ("VRCanvas");
 		EsActual = false;
 		EnDetalle = false;
 		Seleccionado = false;
@@ -64,8 +64,11 @@ public class Tema : MonoBehaviour{
 
 	public void AbrirContenido(){
 		ManagerDetail detalle = MainCanvas.GetComponent<ManagerDetail> ();
-		detalle.LimpiarDetalle ();
 		ManagerMenu menu = MainCanvas.GetComponent<ManagerMenu> ();
+		menu.DesplazarMenu (0);
+		detalle.DesplazarMenu (0);
+		detalle.LimpiarDetalle ();
+
 		foreach (GameObject item in Contenido) {
 			item.SetActive(true);
 			Tema esTema = item.GetComponent<Tema>();
