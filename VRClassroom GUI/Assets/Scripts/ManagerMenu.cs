@@ -27,6 +27,7 @@ public class ManagerMenu : MonoBehaviour {
 	private		Vector3							EscalaInicial;    		//Determina la escala en que se dibujara un nuevo elemento que se agregue
 	private		Vector3							PosInicial;  			//Determina la posicion donde se dibujara un nuevo elemento que se agregue
 	private		float							SaltoElemento;			//Valor real que separa dos elementos (ancho del boton + DistanciaElementos)
+	private		bool							EnMovimiento;
 
 	//----------------------------------------------------------------------------------
 	// Inicializacion
@@ -40,6 +41,7 @@ public class ManagerMenu : MonoBehaviour {
 		ListaElementos = new LinkedList<GameObject> ();
 		PilaListas.Push (ListaElementos);
 		ElementoActual = null;
+		EnMovimiento = false;
 	}
 
 	//-----------------------------------------------------------------------------------
@@ -88,41 +90,45 @@ public class ManagerMenu : MonoBehaviour {
 	 * Mueve la seleccion actual del menu de a un elemento en direccion al final de la lista
 	 * */
 	public void Avanzar(){
-		GameObject elemActual = ElementoActual.Value;
-		LinkedListNode<GameObject> anterior = ElementoActual.Previous;
-		LinkedListNode<GameObject> siguiente = ElementoActual.Next;
-		if (siguiente != null) {
-			// Mueve hacia atras el elemento actual y lo des-selecciona
+		if (!EnMovimiento) {
+			EnMovimiento = true;
+			GameObject elemActual = ElementoActual.Value;
+			LinkedListNode<GameObject> anterior = ElementoActual.Previous;
+			LinkedListNode<GameObject> siguiente = ElementoActual.Next;
+			if (siguiente != null) {
+				// Mueve hacia atras el elemento actual y lo des-selecciona
 
-			SeleccionarItem(elemActual, false);
-			MoverIzquierda(elemActual);
-			RotarElemento(elemActual, primeraRotacion);
+				SeleccionarItem (elemActual, false);
+				MoverIzquierda (elemActual);
+				RotarElemento (elemActual, primeraRotacion);
 
-			if(anterior != null){
-				MoverIzquierda(anterior.Value);
-			}
+				if (anterior != null) {
+					MoverIzquierda (anterior.Value);
+				}
 
-			// Selecciona el siguiente elemento
-			SeleccionarItem(siguiente.Value, true);
-			ElementoActual = siguiente;
+				// Selecciona el siguiente elemento
+				SeleccionarItem (siguiente.Value, true);
+				ElementoActual = siguiente;
 
-			while (siguiente != null){
-				MoverIzquierda(siguiente.Value);
-				siguiente = siguiente.Next;
-			}
+				while (siguiente != null) {
+					MoverIzquierda (siguiente.Value);
+					siguiente = siguiente.Next;
+				}
 
-			while(anterior !=null){
-				ReducirEscala(anterior.Value);
-				MoverFrente(anterior.Value);
-				anterior = anterior.Previous;
-			}
+				while (anterior !=null) {
+					ReducirEscala (anterior.Value);
+					MoverFrente (anterior.Value);
+					anterior = anterior.Previous;
+				}
 
-			PosInicial.x -= SaltoElemento;
-			EscalaInicial.x *= CambioEscala;
-			EscalaInicial.y *= CambioEscala;
+				PosInicial.x -= SaltoElemento;
+				EscalaInicial.x *= CambioEscala;
+				EscalaInicial.y *= CambioEscala;
 			
-		} else {
-			Debug.Log ("Ultimo elemento");
+			} else {
+				Debug.Log ("Ultimo elemento");
+			}
+			EnMovimiento = false;
 		}
 	}
 
@@ -158,40 +164,42 @@ public class ManagerMenu : MonoBehaviour {
 	 * Mueve la seleccion actual del menu de a un elemento en direccion al inicio de la lista
 	 * */
 	public void Retroceder(){
-		GameObject elemActual = ElementoActual.Value;
-		LinkedListNode<GameObject> anterior = ElementoActual.Previous;
-		LinkedListNode<GameObject> siguiente = ElementoActual.Next;
-		if (anterior != null) {
-			// Mueve hacia atras el elemento actual y lo des-selecciona
+		if (!EnMovimiento) {
+			GameObject elemActual = ElementoActual.Value;
+			LinkedListNode<GameObject> anterior = ElementoActual.Previous;
+			LinkedListNode<GameObject> siguiente = ElementoActual.Next;
+			if (anterior != null) {
+				// Mueve hacia atras el elemento actual y lo des-selecciona
 			
-			SeleccionarItem(elemActual, false);
-			MoverDerecha(elemActual);
+				SeleccionarItem (elemActual, false);
+				MoverDerecha (elemActual);
 
-			MoverDerecha(anterior.Value);
-			RotarElemento(anterior.Value, 0);
+				MoverDerecha (anterior.Value);
+				RotarElemento (anterior.Value, 0);
 			
-			// Selecciona el anterior elemento
-			SeleccionarItem(anterior.Value, true);
-			ElementoActual = anterior;
+				// Selecciona el anterior elemento
+				SeleccionarItem (anterior.Value, true);
+				ElementoActual = anterior;
 
-			while (siguiente != null){
-				MoverDerecha(siguiente.Value);
-				siguiente = siguiente.Next;
-			}
+				while (siguiente != null) {
+					MoverDerecha (siguiente.Value);
+					siguiente = siguiente.Next;
+				}
 
-			anterior = anterior.Previous;
-			while(anterior != null){
-				AumetarEscala(anterior.Value);
-				MoverAtras(anterior.Value);
 				anterior = anterior.Previous;
+				while (anterior != null) {
+					AumetarEscala (anterior.Value);
+					MoverAtras (anterior.Value);
+					anterior = anterior.Previous;
+				}
+			
+				PosInicial.x += SaltoElemento;
+				EscalaInicial.x /= CambioEscala;
+				EscalaInicial.y /= CambioEscala;
+			
+			} else {
+				Debug.Log ("Primer elemento");
 			}
-			
-			PosInicial.x += SaltoElemento;
-			EscalaInicial.x /= CambioEscala;
-			EscalaInicial.y /= CambioEscala;
-			
-		} else {
-			Debug.Log ("Primer elemento");
 		}
 	}
 
@@ -282,7 +290,6 @@ public class ManagerMenu : MonoBehaviour {
 	public void DesplazarMenu(int posicion){
 		Vector3 nuevaPos = ScrollPanel.transform.position;
 		nuevaPos.y += Desplazamiento;
-		//nuevaPos.z += Desplazamiento;
 		iTween.MoveTo (ScrollPanel, nuevaPos, velMovimiento);
 	}
 
