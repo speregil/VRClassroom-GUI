@@ -27,8 +27,7 @@ public class ManagerMenu : MonoBehaviour {
 	private		Vector3							EscalaInicial;    		//Determina la escala en que se dibujara un nuevo elemento que se agregue
 	private		Vector3							PosInicial;  			//Determina la posicion donde se dibujara un nuevo elemento que se agregue
 	private		float							SaltoElemento;			//Valor real que separa dos elementos (ancho del boton + DistanciaElementos)
-	private		bool							EnMovimiento;
-
+	private		bool							Desplazado;
 	//----------------------------------------------------------------------------------
 	// Inicializacion
 	//----------------------------------------------------------------------------------
@@ -41,7 +40,7 @@ public class ManagerMenu : MonoBehaviour {
 		ListaElementos = new LinkedList<GameObject> ();
 		PilaListas.Push (ListaElementos);
 		ElementoActual = null;
-		EnMovimiento = false;
+		Desplazado = false;
 	}
 
 	//-----------------------------------------------------------------------------------
@@ -90,8 +89,6 @@ public class ManagerMenu : MonoBehaviour {
 	 * Mueve la seleccion actual del menu de a un elemento en direccion al final de la lista
 	 * */
 	public void Avanzar(){
-		if (!EnMovimiento) {
-			EnMovimiento = true;
 			GameObject elemActual = ElementoActual.Value;
 			LinkedListNode<GameObject> anterior = ElementoActual.Previous;
 			LinkedListNode<GameObject> siguiente = ElementoActual.Next;
@@ -128,8 +125,6 @@ public class ManagerMenu : MonoBehaviour {
 			} else {
 				Debug.Log ("Ultimo elemento");
 			}
-			EnMovimiento = false;
-		}
 	}
 
 	/**
@@ -164,7 +159,6 @@ public class ManagerMenu : MonoBehaviour {
 	 * Mueve la seleccion actual del menu de a un elemento en direccion al inicio de la lista
 	 * */
 	public void Retroceder(){
-		if (!EnMovimiento) {
 			GameObject elemActual = ElementoActual.Value;
 			LinkedListNode<GameObject> anterior = ElementoActual.Previous;
 			LinkedListNode<GameObject> siguiente = ElementoActual.Next;
@@ -200,7 +194,6 @@ public class ManagerMenu : MonoBehaviour {
 			} else {
 				Debug.Log ("Primer elemento");
 			}
-		}
 	}
 
 	/**
@@ -231,10 +224,15 @@ public class ManagerMenu : MonoBehaviour {
 		elemento.transform.localScale = nuevaEscala;
 	}
 
-	public void BajarNivel(Tema temaPadre){
-		List<GameObject> nuevoContenido = temaPadre.Contenido;
-		LimpiarMenu ();
-		foreach (GameObject item in nuevoContenido) {
+	public void BajarNivel(){
+		DesplazarMenu (0);
+		Desplazado = true;
+		//GameObject detalle = GameObject.Find ("DetailCanvas");
+		//ManagerDetail md = detalle.GetComponent<ManagerDetail> ();
+		//md.DesplazarMenu (1);
+		//List<GameObject> nuevoContenido = temaPadre.Contenido;
+		//LimpiarMenu ();
+		/**foreach (GameObject item in nuevoContenido) {
 			Tema actual = item.GetComponent<Tema>();
 			if(actual !=null){
 				item.SetActive(true);
@@ -243,11 +241,13 @@ public class ManagerMenu : MonoBehaviour {
 				Agregar(item);
 			}
 		}
-		PilaListas.Push (ListaElementos);
+		PilaListas.Push (ListaElementos);**/
 	}
 
 	public void SubirNivel(){
-		PilaListas.Pop ();
+		Desplazado = false;
+		DesplazarMenu (1);
+		/**PilaListas.Pop ();
 		LimpiarMenu ();
 		ManagerDetail md = this.gameObject.GetComponent<ManagerDetail> ();
 		md.LimpiarDetalle ();
@@ -261,7 +261,7 @@ public class ManagerMenu : MonoBehaviour {
 				Agregar(item);
 			}
 		}
-		PilaListas.Push (ListaElementos);
+		PilaListas.Push (ListaElementos);**/
 	}
 
 	public void LimpiarMenu(){
@@ -288,9 +288,15 @@ public class ManagerMenu : MonoBehaviour {
 	}
 
 	public void DesplazarMenu(int posicion){
-		Vector3 nuevaPos = ScrollPanel.transform.position;
-		nuevaPos.y += Desplazamiento;
-		iTween.MoveTo (ScrollPanel, nuevaPos, velMovimiento);
+		if (!Desplazado) {
+			Vector3 nuevaPos = ScrollPanel.transform.position;
+			if (posicion == 0) {
+				nuevaPos.y += Desplazamiento;
+			} else {
+				nuevaPos.y -= Desplazamiento;
+			}
+			iTween.MoveTo (ScrollPanel, nuevaPos, velMovimiento);
+		}
 	}
 
 	public void SetParametrosIniciales(){

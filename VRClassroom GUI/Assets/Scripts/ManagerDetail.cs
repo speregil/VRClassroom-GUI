@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic;
 
 public class ManagerDetail : MonoBehaviour {
 
 	public  	GameObject						PrefElemento;
-	public  	GameObject						FlechaAdelante;
-	public  	GameObject						FlechaAtras;
+	public  	GameObject						BotonSubir;
 	public		GameObject						PanelItems;
 	public		GameObject						MenuDetalle;
 	public		float							Desplazamiento;
@@ -14,6 +14,7 @@ public class ManagerDetail : MonoBehaviour {
 	private		int								IndicePos;
 	private		LinkedListNode<GameObject>		PrimerElemento;
 	private		LinkedListNode<GameObject>		UltimoElemento;
+	private		bool							Desplazado;
 
 	// Use this for initialization
 	void Start () {
@@ -22,6 +23,7 @@ public class ManagerDetail : MonoBehaviour {
 		float altura = PrefElemento.GetComponent<RectTransform> ().rect.height;
 		float ancho = PrefElemento.GetComponent<RectTransform> ().rect.width;
 		Vector3	initial = PanelItems.transform.localPosition;
+		Desplazado = false;
 		initial.x = initial.x + 50;
 		initial.y = initial.y + 100;
 		PosicionesPanel[0] = initial;
@@ -56,7 +58,7 @@ public class ManagerDetail : MonoBehaviour {
 			IndicePos++;
 		} else if (IndicePos > 5) {
 			nuevoTema.SetActive (false);
-			FlechaAdelante.SetActive(true);
+			//FlechaAdelante.SetActive(true);
 		}else {
 			UltimoElemento = ListaElementos.Last;
 			nuevoTema.transform.localPosition = PosicionesPanel[IndicePos];
@@ -78,7 +80,7 @@ public class ManagerDetail : MonoBehaviour {
 			IndicePos++;
 		} else if (IndicePos > 5) {
 			nuevoTema.SetActive (false);
-			FlechaAdelante.SetActive(true);
+			//FlechaAdelante.SetActive(true);
 		}else {
 			UltimoElemento = ListaElementos.Last;
 			nuevoTema.transform.localPosition = PosicionesPanel[IndicePos];
@@ -89,7 +91,7 @@ public class ManagerDetail : MonoBehaviour {
 	public void Avanzar(){
 
 		PrimerElemento.Value.SetActive (false);
-		FlechaAtras.SetActive (true); 
+		//FlechaAtras.SetActive (true); 
 
 		MoverIzquierda (PrimerElemento.Next, 0);
 
@@ -109,14 +111,14 @@ public class ManagerDetail : MonoBehaviour {
 			if (siguiente != null)
 				MoverIzquierda (siguiente, pos + 1);
 		} else if (siguiente == null) {
-			FlechaAdelante.SetActive (false);
+			//FlechaAdelante.SetActive (false);
 		}
 	}
 
 	public void Retroceder(){
 		UltimoElemento.Value.SetActive (false);
 		//UltimoElemento.Previous.Value.SetActive (false);
-		FlechaAdelante.SetActive (true);
+		//FlechaAdelante.SetActive (true);
 		
 		MoverDerecha (UltimoElemento.Previous, 5);
 	}
@@ -135,7 +137,7 @@ public class ManagerDetail : MonoBehaviour {
 			if (anterior != null)
 				MoverDerecha (anterior, pos - 1);
 		} else if (anterior == null) {
-			FlechaAtras.SetActive (false);
+			//FlechaAtras.SetActive (false);
 		}
 	}
 
@@ -150,9 +152,32 @@ public class ManagerDetail : MonoBehaviour {
 	}
 
 	public void DesplazarMenu(int posicion){
-		Vector3 nuevaPos = MenuDetalle.transform.position;
-		nuevaPos.y += Desplazamiento;
-		//nuevaPos.z += Desplazamiento;
-		iTween.MoveTo (MenuDetalle, nuevaPos, 1);
+		if (!Desplazado) {
+			Vector3 nuevaPos = MenuDetalle.transform.position;
+			if (posicion == 0) {
+				nuevaPos.y += Desplazamiento;
+			} else {
+				nuevaPos.y -= Desplazamiento;
+			}
+			iTween.MoveTo (MenuDetalle, nuevaPos, 1);
+		}
+	}
+
+	public void BajarNivel(){
+		Button btnSubir = BotonSubir.GetComponent<Button>();
+		btnSubir.interactable = true;
+		DesplazarMenu (0);
+		Desplazado = true;
+	}
+
+	public void SubirNivel(){
+		Desplazado = false;
+		DesplazarMenu (1);
+		Button btnSubir = BotonSubir.GetComponent<Button>();
+		btnSubir.interactable = false;
+
+		GameObject menu = GameObject.Find ("MainCanvas");
+		ManagerMenu mm = menu.GetComponent<ManagerMenu> ();
+		mm.SubirNivel ();
 	}
 }

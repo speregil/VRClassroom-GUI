@@ -14,10 +14,11 @@ public class Tema : MonoBehaviour{
 	public		bool				EnDetalle;
 	public		bool				Seleccionado;
 	public		bool				PrimerClick;
+	public 		bool				Desplazado;
 	public		List<GameObject>	Contenido;
 	public		Tema				TemaPadre;
 
-	private		GameObject			PanelInfo;
+	private		GameObject			DetailCanvas;
 	private		GameObject			MainCanvas;
 
 	void Awake (){
@@ -28,8 +29,8 @@ public class Tema : MonoBehaviour{
 		PorcentajeCompleto = 0.0f;
 		Contenido = new List<GameObject>();
 		TemaPadre = null;
-		PanelInfo = GameObject.Find ("InfoPanel");
-		MainCanvas = GameObject.Find ("VRCanvas");
+		DetailCanvas = GameObject.Find ("DetailCanvas");
+		MainCanvas = GameObject.Find ("MainCanvas");
 		EsActual = false;
 		EnDetalle = false;
 		Seleccionado = false;
@@ -58,15 +59,14 @@ public class Tema : MonoBehaviour{
 	}
 
 	public void MostrarInfo(){
-		PanelInformacion panel = PanelInfo.GetComponent<PanelInformacion> ();
+		PanelInformacion panel = DetailCanvas.GetComponentInChildren<PanelInformacion> ();
 		panel.MostrarInfoTema (this.gameObject);
 	}
 
 	public void AbrirContenido(){
-		ManagerDetail detalle = MainCanvas.GetComponent<ManagerDetail> ();
+		ManagerDetail detalle = DetailCanvas.GetComponent<ManagerDetail> ();
 		ManagerMenu menu = MainCanvas.GetComponent<ManagerMenu> ();
-		menu.DesplazarMenu (0);
-		detalle.DesplazarMenu (0);
+
 		detalle.LimpiarDetalle ();
 
 		foreach (GameObject item in Contenido) {
@@ -91,11 +91,14 @@ public class Tema : MonoBehaviour{
 		ManagerMenu menu = MainCanvas.GetComponent<ManagerMenu> ();
 		PrimerClick = false;
 		EnDetalle = false;
-		ManagerDetail detalle = MainCanvas.GetComponent<ManagerDetail> ();
+		ManagerDetail detalle = DetailCanvas.GetComponent<ManagerDetail> ();
 		detalle.LimpiarDetalle ();
-		PanelInformacion panel = PanelInfo.GetComponent<PanelInformacion> ();
+		PanelInformacion panel = DetailCanvas.GetComponentInChildren<PanelInformacion> ();
 		panel.LimpiarInfo ();
-		menu.BajarNivel (TemaPadre);
+	
+		menu.BajarNivel ();
+		detalle.BajarNivel ();
+
 		AbrirContenido ();
 	}
 
