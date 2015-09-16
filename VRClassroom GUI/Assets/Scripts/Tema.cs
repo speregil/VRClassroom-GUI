@@ -68,21 +68,7 @@ public class Tema : MonoBehaviour{
 		ManagerMenu menu = MainCanvas.GetComponent<ManagerMenu> ();
 
 		detalle.LimpiarDetalle ();
-
-		foreach (GameObject item in Contenido) {
-			item.SetActive(true);
-			Tema esTema = item.GetComponent<Tema>();
-			Elemento esElemento = item.GetComponent<Elemento>();
-
-			if(esTema != null){
-				menu.SeleccionarItem(item, false);
-				esTema.EnDetalle = true;
-				detalle.AgregarTema(item);
-			}else{
-				esElemento.EnDetalle = true;
-				detalle.AgregarElemento(item);
-			}
-		}
+		menu.AbrirContenido (Contenido);
 
 		MostrarInfo ();
 	}

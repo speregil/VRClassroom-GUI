@@ -13,7 +13,8 @@ public class ManagerMenu : MonoBehaviour {
 	//---------------------------------------------------------------------------------
 	
 	public		GameObject						ScrollPanel;			//Panel que contiene los elementos
-	public		GameObject						Flecha;					//Icono que muestra que hay mas objetos escondidos hacia la derecha;
+	public		GameObject						ItemView;				//Objeto padre del menu horizontal y veertical
+	public		GameObject						ItemPanel;
 	public		float							DistanciaElementos;		//Distancia entre los elementos del menu
 	public		float							CambioEscala; 			//Cambio en la escala de los distintos elementos a lo largo de la horizontal
 	public		float							AnchoElementos;			//Ancho del prefab de los elemetos
@@ -284,6 +285,21 @@ public class ManagerMenu : MonoBehaviour {
 			imgComp.color = Color.blue;
 			Tema mTema = item.GetComponent<Tema> ();
 			mTema.EsActual = false;
+		}
+	}
+
+	public void AbrirContenido(List<GameObject> listaElementos){
+		foreach (GameObject item in listaElementos) {
+			item.SetActive (true);
+			Tema esTema = item.GetComponent<Tema> ();
+			Elemento esElemento = item.GetComponent<Elemento> ();
+			
+			if (esTema != null) {
+				SeleccionarItem (item, false);
+				esTema.EnDetalle = true;
+			} else {
+				esElemento.EnDetalle = true;
+			}
 		}
 	}
 
