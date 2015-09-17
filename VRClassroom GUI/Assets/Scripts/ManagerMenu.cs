@@ -27,6 +27,7 @@ public class ManagerMenu : MonoBehaviour {
 	private 	LinkedListNode<GameObject>		ElementoActual;			//Elemento que el usuario ve actualmente
 	private		Vector3							EscalaInicial;    		//Determina la escala en que se dibujara un nuevo elemento que se agregue
 	private		Vector3							PosInicial;  			//Determina la posicion donde se dibujara un nuevo elemento que se agregue
+	private		Vector3							PosDetalle;
 	private		float							SaltoElemento;			//Valor real que separa dos elementos (ancho del boton + DistanciaElementos)
 	private		bool							Desplazado;
 	//----------------------------------------------------------------------------------
@@ -300,6 +301,13 @@ public class ManagerMenu : MonoBehaviour {
 			} else {
 				esElemento.EnDetalle = true;
 			}
+
+			item.transform.SetParent(ItemPanel.transform, false);
+			RectTransform rt = item.GetComponent<RectTransform> ();
+			rt.sizeDelta = new Vector2 (185, 185);
+			item.transform.localPosition = PosDetalle;
+
+			PosDetalle.y -= SaltoElemento;
 		}
 	}
 
@@ -317,6 +325,7 @@ public class ManagerMenu : MonoBehaviour {
 
 	public void SetParametrosIniciales(){
 		PosInicial = ScrollPanel.transform.localPosition;
+		PosDetalle = Vector3.zero;
 		SaltoElemento = AnchoElementos + DistanciaElementos;
 		EscalaInicial = new Vector3 (1.0f, 1.0f, 1.0f);
 	}

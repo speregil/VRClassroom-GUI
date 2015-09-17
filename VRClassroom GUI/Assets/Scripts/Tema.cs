@@ -89,6 +89,7 @@ public class Tema : MonoBehaviour{
 	}
 
 	public void EnClick(){
+		ManagerMenu menu = MainCanvas.GetComponent<ManagerMenu> ();
 		if (EnDetalle) {
 			if(PrimerClick){
 				BajarNivel();
@@ -100,6 +101,10 @@ public class Tema : MonoBehaviour{
 		} else {
 			if(EsActual){
 				AbrirContenido();
+				menu.BajarNivel();
+			}
+			else{
+				menu.Avanzar();
 			}
 		}
 	}	

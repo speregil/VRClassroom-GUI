@@ -17,6 +17,13 @@ public class Test2 : MonoBehaviour {
 		menu.SetParametrosIniciales ();
 
 		GameObject nuevoTema = editor.CrearTema ("Test1", "Sebastian Gil Parga", new DateTime (2015, 9, 10));
+		Tema mtNuevo = nuevoTema.GetComponent<Tema> ();
+		GameObject TemaHijo = editor.CrearTema ("Test1.1", "Sebastian Gil Parga", new DateTime (2015, 9, 17));
+		Tema mtHijo = TemaHijo.GetComponent<Tema>();
+		mtHijo.TemaPadre = nuevoTema.GetComponent<Tema>();
+		mtNuevo.AgregarContenido (TemaHijo);
+		GameObject ElementoHijo = editor.CrearElemento ("Elemento 1.1", "Descripcion 1.1");
+		mtNuevo.AgregarContenido (ElementoHijo);
 		menu.Agregar (nuevoTema);
 
 		nuevoTema = editor.CrearTema ("Test2", "Sebastian Gil Parga", new DateTime (2015, 9, 10));
