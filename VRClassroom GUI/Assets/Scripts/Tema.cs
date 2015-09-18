@@ -90,21 +90,24 @@ public class Tema : MonoBehaviour{
 
 	public void EnClick(){
 		ManagerMenu menu = MainCanvas.GetComponent<ManagerMenu> ();
+		ManagerDetail detale = DetailCanvas.GetComponent<ManagerDetail> ();
+
 		if (EnDetalle) {
-			if(PrimerClick){
-				BajarNivel();
+			if(EsActual){
+				MostrarInfo();
 			}
 			else{
+				menu.DetectarPosicion(this,1);
 				MostrarInfo();
-				PrimerClick = true;
 			}
 		} else {
 			if(EsActual){
 				AbrirContenido();
 				menu.BajarNivel();
+				detale.BajarNivel();
 			}
 			else{
-				menu.Avanzar();
+				menu.DetectarPosicion(this,0);
 			}
 		}
 	}	

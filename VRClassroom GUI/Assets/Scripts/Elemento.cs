@@ -7,19 +7,37 @@ public class Elemento : MonoBehaviour {
 	public	string		Descripcion;
 	public	bool		Completado;
 	public	bool		EnDetalle;
-
-	private	GameObject	PanelInfo;
+	public 	bool		EsActual;
+	
+	private	GameObject	DetailCanvas;
+	private	GameObject	MainCanvas;
 	
 	void Awake () {
 		Nombre = "SinNombre";
 		Descripcion = "SinDescripcion";
 		Completado = false;
 		EnDetalle = false;
-		PanelInfo = GameObject.Find ("InfoPanel");
+		DetailCanvas = GameObject.Find ("DetailCanvas");
+		MainCanvas = GameObject.Find ("MainCanvas");
 	}
 
 	public void MostrarInfo(){
-		PanelInformacion panel = PanelInfo.GetComponent<PanelInformacion> ();
+		PanelInformacion panel = DetailCanvas.GetComponentInChildren<PanelInformacion> ();
 		panel.MostrarInfoElemento (this.gameObject);
 	}
+
+	public void EnClick(){
+		ManagerMenu menu = MainCanvas.GetComponent<ManagerMenu> ();
+		ManagerDetail detale = DetailCanvas.GetComponent<ManagerDetail> ();
+		
+		if (EnDetalle) {
+			if(EsActual){
+				MostrarInfo();
+			}
+			else{
+				menu.AvanzarDetalle();
+				MostrarInfo();
+			}
+		} 
+	}	
 }

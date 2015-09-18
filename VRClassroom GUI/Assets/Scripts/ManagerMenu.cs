@@ -13,7 +13,7 @@ public class ManagerMenu : MonoBehaviour {
 	//---------------------------------------------------------------------------------
 	
 	public		GameObject						ScrollPanel;			//Panel que contiene los elementos
-	public		GameObject						ItemView;				//Objeto padre del menu horizontal y veertical
+	public		GameObject						ItemView;				//Objeto padre del menu horizontal y vertical
 	public		GameObject						ItemPanel;
 	public		float							DistanciaElementos;		//Distancia entre los elementos del menu
 	public		float							CambioEscala; 			//Cambio en la escala de los distintos elementos a lo largo de la horizontal
@@ -24,7 +24,9 @@ public class ManagerMenu : MonoBehaviour {
 	public 		float							Desplazamiento;
 	private		Stack<LinkedList<GameObject>>	PilaListas;				//Pila que maneja las distintas jerarquias del sistema de archivos
 	private 	LinkedList<GameObject>			ListaElementos;			//Lista logica que contiene y maneja los elementos
+	private 	LinkedList<GameObject>			ListaDetalle;
 	private 	LinkedListNode<GameObject>		ElementoActual;			//Elemento que el usuario ve actualmente
+	private		LinkedListNode<GameObject>		DetalleActual;
 	private		Vector3							EscalaInicial;    		//Determina la escala en que se dibujara un nuevo elemento que se agregue
 	private		Vector3							PosInicial;  			//Determina la posicion donde se dibujara un nuevo elemento que se agregue
 	private		Vector3							PosDetalle;
@@ -40,6 +42,7 @@ public class ManagerMenu : MonoBehaviour {
 
 		PilaListas = new Stack<LinkedList<GameObject>> ();
 		ListaElementos = new LinkedList<GameObject> ();
+		ListaDetalle = new LinkedList<GameObject> ();
 		PilaListas.Push (ListaElementos);
 		ElementoActual = null;
 		Desplazado = false;
@@ -129,6 +132,34 @@ public class ManagerMenu : MonoBehaviour {
 			}
 	}
 
+	public void AvanzarDetalle(){
+		GameObject elemActual = DetalleActual.Value;
+		LinkedListNode<GameObject> anterior = DetalleActual.Previous;
+		LinkedListNode<GameObject> siguiente = DetalleActual.Next;
+		if (siguiente != null) {
+			SeleccionarItem (elemActual, false);
+			SaltarFila (elemActual);
+
+			while (anterior !=null) {
+				MoverArriba (anterior.Value);
+				anterior = anterior.Previous;
+			}
+
+			SeleccionarItem (siguiente.Value, true);
+			DetalleActual = siguiente;
+
+			while (siguiente != null) {
+				MoverArriba (siguiente.Value);
+				siguiente = siguiente.Next;
+			}
+
+			PosDetalle.y += SaltoElemento;
+		}
+		else {
+			Debug.Log ("Ultimo elemento en detalle");
+		}
+	}
+
 	/**
 	 * Corutina que mueve hacia la izquierda un espacio el elemento pasado por parametro
 	 * */
@@ -151,9 +182,20 @@ public class ManagerMenu : MonoBehaviour {
 	 * Corutina que mueve hacia la izquierda un espacio el elemento pasado por parametro
 	 * */
 	public void MoverAtras(GameObject elemento){
-		Debug.Log ("Atras");
 		Vector3 nuevaPos = elemento.transform.position;
 		nuevaPos.z += SaltoElemento;
+		iTween.MoveTo (elemento, nuevaPos,velMovimiento);
+	}
+
+	public void MoverArriba(GameObject elemento){
+		Vector3 nuevaPos = elemento.transform.position;
+		nuevaPos.y += SaltoElemento;
+		iTween.MoveTo (elemento, nuevaPos,velMovimiento);
+	}
+
+	public void SaltarFila(GameObject elemento){
+		Vector3 nuevaPos = elemento.transform.position;
+		nuevaPos.y += SaltoElemento*1.5f;
 		iTween.MoveTo (elemento, nuevaPos,velMovimiento);
 	}
 
@@ -198,12 +240,54 @@ public class ManagerMenu : MonoBehaviour {
 			}
 	}
 
+	public void RetrocederDetalle(){
+		GameObject elemActual = DetalleActual.Value;
+		LinkedListNode<GameObject> anterior = DetalleActual.Previous;
+		LinkedListNode<GameObject> siguiente = DetalleActual.Next;
+		if (anterior != null) {
+			SeleccionarItem (elemActual, false);
+			MoverAbajo (elemActual);
+
+			BajarFila(anterior.Value);
+			SeleccionarItem (anterior.Value, true);
+			DetalleActual = anterior;
+
+			while (siguiente != null) {
+				MoverAbajo (siguiente.Value);
+				siguiente = siguiente.Next;
+			}
+
+			anterior = anterior.Previous;
+			while (anterior != null) {
+				MoverAbajo (anterior.Value);
+				anterior = anterior.Previous;
+			}
+
+			PosInicial.x -= SaltoElemento;
+		}
+		else {
+			Debug.Log ("Primer elemento");
+		}
+	}
+
 	/**
 	 * Corutina que mueve hacia la derecha un espacio el elemento pasado por parametro
 	 * */
 	public void MoverDerecha(GameObject elemento){
 		Vector3 nuevaPos = elemento.transform.position;
 		nuevaPos.x += SaltoElemento;
+		iTween.MoveTo (elemento, nuevaPos,velMovimiento);
+	}
+
+	public void MoverAbajo(GameObject elemento){
+		Vector3 nuevaPos = elemento.transform.position;
+		nuevaPos.y -= SaltoElemento;
+		iTween.MoveTo (elemento, nuevaPos,velMovimiento);
+	}
+
+	public void BajarFila(GameObject elemento){
+		Vector3 nuevaPos = elemento.transform.position;
+		nuevaPos.y -= SaltoElemento*1.5f;
 		iTween.MoveTo (elemento, nuevaPos,velMovimiento);
 	}
 
@@ -224,6 +308,33 @@ public class ManagerMenu : MonoBehaviour {
 		nuevaEscala.x *= CambioEscala;
 		nuevaEscala.y *= CambioEscala;
 		elemento.transform.localScale = nuevaEscala;
+	}
+
+	public void DetectarPosicion(Tema temaMenu, int eje){
+		if (eje == 0) {
+			if (EstaAdelante (temaMenu)) {
+				Avanzar ();
+			} else {
+				Retroceder ();
+			}
+		} else {
+			if (EstaAdelante (temaMenu)) {
+				AvanzarDetalle ();
+			} else {
+				RetrocederDetalle ();
+			}
+		}
+	}
+
+	public bool EstaAdelante(Tema temaMenu){
+		LinkedListNode<GameObject> actual = ElementoActual.Next;
+		while (actual != null) {
+			Tema mtActual = actual.Value.GetComponent<Tema>();
+			if(mtActual.Nombre.Equals(temaMenu.Nombre))
+				return true;
+			actual = actual.Next;
+		}
+		return false;
 	}
 
 	public void BajarNivel(){
@@ -276,16 +387,24 @@ public class ManagerMenu : MonoBehaviour {
 	}
 
 	public void SeleccionarItem(GameObject item, bool seleccionar){
+
+		Tema mTema = item.GetComponent<Tema> ();
+		Elemento mElemento = item.GetComponent<Elemento>();
+
 		if (seleccionar) {
 			Image imgComp = item.GetComponent<Image> ();
 			imgComp.color = Color.red;
-			Tema mTema = item.GetComponent<Tema> ();
-			mTema.EsActual = true;
+			if(mTema !=null)
+				mTema.EsActual = true;
+			else
+				mElemento.EsActual = true;
 		} else {
 			Image imgComp = item.GetComponent<Image> ();
 			imgComp.color = Color.blue;
-			Tema mTema = item.GetComponent<Tema> ();
-			mTema.EsActual = false;
+			if(mTema !=null)
+				mTema.EsActual = false;
+			else
+				mElemento.EsActual = false;
 		}
 	}
 
@@ -308,6 +427,13 @@ public class ManagerMenu : MonoBehaviour {
 			item.transform.localPosition = PosDetalle;
 
 			PosDetalle.y -= SaltoElemento;
+
+			ListaDetalle.AddLast(item);
+
+			if(ListaDetalle.Count == 1){
+				DetalleActual = ListaDetalle.First;
+				SeleccionarItem(item, true);
+			}
 		}
 	}
 
