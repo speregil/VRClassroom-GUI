@@ -27,12 +27,34 @@ public class Test2 : MonoBehaviour {
 		menu.Agregar (nuevoTema);
 
 		nuevoTema = editor.CrearTema ("Test2", "Sebastian Gil Parga", new DateTime (2015, 9, 10));
+		mtNuevo = nuevoTema.GetComponent<Tema> ();
+		TemaHijo = editor.CrearTema ("Test2.1", "Sebastian Gil Parga", new DateTime (2015, 9, 17));
+		mtHijo = TemaHijo.GetComponent<Tema>();
+		mtHijo.TemaPadre = nuevoTema.GetComponent<Tema>();
+		mtNuevo.AgregarContenido (TemaHijo);
+		ElementoHijo = editor.CrearElemento ("Elemento 2.1", "Descripcion 1.1");
+		mtNuevo.AgregarContenido (ElementoHijo);
 		menu.Agregar (nuevoTema);
 
+
 		nuevoTema = editor.CrearTema ("Test3", "Sebastian Gil Parga", new DateTime (2015, 9, 10));
+		mtNuevo = nuevoTema.GetComponent<Tema> ();
+		TemaHijo = editor.CrearTema ("Test3.1", "Sebastian Gil Parga", new DateTime (2015, 9, 17));
+		mtHijo = TemaHijo.GetComponent<Tema>();
+		mtHijo.TemaPadre = nuevoTema.GetComponent<Tema>();
+		mtNuevo.AgregarContenido (TemaHijo);
+		ElementoHijo = editor.CrearElemento ("Elemento 3.1", "Descripcion 1.1");
+		mtNuevo.AgregarContenido (ElementoHijo);
 		menu.Agregar (nuevoTema);
 
 		nuevoTema = editor.CrearTema ("Test4", "Sebastian Gil Parga", new DateTime (2015, 9, 10));
+		mtNuevo = nuevoTema.GetComponent<Tema> ();
+		TemaHijo = editor.CrearTema ("Test4.1", "Sebastian Gil Parga", new DateTime (2015, 9, 17));
+		mtHijo = TemaHijo.GetComponent<Tema>();
+		mtHijo.TemaPadre = nuevoTema.GetComponent<Tema>();
+		mtNuevo.AgregarContenido (TemaHijo);
+		ElementoHijo = editor.CrearElemento ("Elemento 4.1", "Descripcion 1.1");
+		mtNuevo.AgregarContenido (ElementoHijo);
 		menu.Agregar (nuevoTema);
 	}
 }

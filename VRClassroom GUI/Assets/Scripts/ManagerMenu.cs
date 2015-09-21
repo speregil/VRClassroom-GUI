@@ -126,6 +126,12 @@ public class ManagerMenu : MonoBehaviour {
 				PosInicial.x -= SaltoElemento;
 				EscalaInicial.x *= CambioEscala;
 				EscalaInicial.y *= CambioEscala;
+
+				Tema mt = ElementoActual.Value.GetComponent<Tema>();
+				if(mt.Seleccionado){
+					LimpiarMenuVertical();
+					mt.AbrirContenido();
+				}
 			
 			} else {
 				Debug.Log ("Ultimo elemento");
@@ -234,6 +240,12 @@ public class ManagerMenu : MonoBehaviour {
 				PosInicial.x += SaltoElemento;
 				EscalaInicial.x /= CambioEscala;
 				EscalaInicial.y /= CambioEscala;
+
+				Tema mt = ElementoActual.Value.GetComponent<Tema>();
+				if(mt.Seleccionado){
+					LimpiarMenuVertical();
+					mt.AbrirContenido();
+				}
 			
 			} else {
 				Debug.Log ("Primer elemento");
@@ -340,6 +352,11 @@ public class ManagerMenu : MonoBehaviour {
 	public void BajarNivel(){
 		DesplazarMenu (0);
 		Desplazado = true;
+
+		foreach (GameObject item in ListaElementos) {
+			Tema mt = item.GetComponent<Tema>();
+			mt.Seleccionado = true;
+		}
 		//GameObject detalle = GameObject.Find ("DetailCanvas");
 		//ManagerDetail md = detalle.GetComponent<ManagerDetail> ();
 		//md.DesplazarMenu (1);
@@ -360,6 +377,12 @@ public class ManagerMenu : MonoBehaviour {
 	public void SubirNivel(){
 		Desplazado = false;
 		DesplazarMenu (1);
+
+		foreach (GameObject item in ListaElementos) {
+			Tema mt = item.GetComponent<Tema>();
+			mt.Seleccionado = false;
+		}
+		LimpiarMenuVertical ();
 		/**PilaListas.Pop ();
 		LimpiarMenu ();
 		ManagerDetail md = this.gameObject.GetComponent<ManagerDetail> ();
@@ -377,13 +400,22 @@ public class ManagerMenu : MonoBehaviour {
 		PilaListas.Push (ListaElementos);**/
 	}
 
-	public void LimpiarMenu(){
+	public void LimpiarMenuHorizontal(){
 		foreach (GameObject nodo in ListaElementos) {
 			nodo.SetActive(false);
 		}
 
 		ListaElementos = new LinkedList<GameObject> ();
 		SetParametrosIniciales ();
+	}
+
+	public void LimpiarMenuVertical(){
+		foreach (GameObject nodo in ListaDetalle) {
+			nodo.SetActive(false);
+		}
+		
+		ListaDetalle = new LinkedList<GameObject> ();
+		PosDetalle = Vector3.zero;
 	}
 
 	public void SeleccionarItem(GameObject item, bool seleccionar){
