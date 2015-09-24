@@ -13,7 +13,6 @@ public class Tema : MonoBehaviour{
 	public		bool				EsActual;
 	public		bool				EnDetalle;
 	public		bool				Seleccionado;
-	public		bool				PrimerClick;
 	public 		bool				Desplazado;
 	public		List<GameObject>	Contenido;
 	public		Tema				TemaPadre;
@@ -34,7 +33,6 @@ public class Tema : MonoBehaviour{
 		EsActual = false;
 		EnDetalle = false;
 		Seleccionado = false;
-		PrimerClick = false;
 	}
 
 	public void AgregarContenido(GameObject nuevoContenido){
@@ -73,31 +71,18 @@ public class Tema : MonoBehaviour{
 		MostrarInfo ();
 	}
 
-	public void	BajarNivel(){
-		ManagerMenu menu = MainCanvas.GetComponent<ManagerMenu> ();
-		PrimerClick = false;
-		EnDetalle = false;
-		ManagerDetail detalle = DetailCanvas.GetComponent<ManagerDetail> ();
-		detalle.LimpiarDetalle ();
-		PanelInformacion panel = DetailCanvas.GetComponentInChildren<PanelInformacion> ();
-		panel.LimpiarInfo ();
-	
-		menu.BajarNivel ();
-		detalle.BajarNivel ();
-
-		AbrirContenido ();
-	}
-
 	public void EnClick(){
 		ManagerMenu menu = MainCanvas.GetComponent<ManagerMenu> ();
 		ManagerDetail detale = DetailCanvas.GetComponent<ManagerDetail> ();
 
 		if (EnDetalle) {
 			if(EsActual){
-				MostrarInfo();
-			}
+                menu.ReemplazarNivel();
+                menu.SubirNivel();
+                detale.SubirNivel();
+            }
 			else{
-				menu.DetectarPosicion(this,1);
+				menu.DetectarPosicion(this.gameObject,1);
 				MostrarInfo();
 			}
 		} else {
@@ -107,7 +92,7 @@ public class Tema : MonoBehaviour{
 				detale.BajarNivel();
 			}
 			else{
-				menu.DetectarPosicion(this,0);
+				menu.DetectarPosicion(this.gameObject,0);
 			}
 		}
 	}	

@@ -4,7 +4,10 @@ using System.Collections;
 
 public class PanelInformacion : MonoBehaviour {
 
-	public	GameObject	NombreTema;
+    public  GameObject  InfoTema;
+    public  GameObject  InfoElemento;
+
+    public	GameObject	NombreTema;
 	public 	GameObject	AutorTema;
 	public	GameObject	FechaTema;
 	public	GameObject	NumeroTema;
@@ -14,15 +17,6 @@ public class PanelInformacion : MonoBehaviour {
 	public	GameObject	DescripcionElemento;
 	public	GameObject	ToogleCompletado;
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 
 	public void MostrarInfoTema(GameObject temaSeleccionado){
 		Tema tm = temaSeleccionado.GetComponent<Tema> ();
@@ -61,17 +55,11 @@ public class PanelInformacion : MonoBehaviour {
 	}
 
 	public void ActivarInfoTema(bool activar){
-		NombreTema.SetActive (activar);
-		AutorTema.SetActive(activar);
-		FechaTema.SetActive (activar);
-		NumeroTema.SetActive (activar);
-		PorcentajeTema.SetActive (activar);
+        InfoTema.SetActive(activar);
 	}
 
 	public void ActivarInfoElemento(bool activar){
-		NombreElemento.SetActive (activar);
-		DescripcionElemento.SetActive (activar);
-		ToogleCompletado.SetActive (activar);
+        InfoElemento.SetActive(activar);
 	}
 
 	public void LimpiarInfo(){

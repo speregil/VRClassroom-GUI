@@ -43,7 +43,7 @@ public class ManagerMenu : MonoBehaviour {
 		PilaListas = new Stack<LinkedList<GameObject>> ();
 		ListaElementos = new LinkedList<GameObject> ();
 		ListaDetalle = new LinkedList<GameObject> ();
-		PilaListas.Push (ListaElementos);
+		//PilaListas.Push (ListaElementos);
 		ElementoActual = null;
 		Desplazado = false;
 	}
@@ -61,7 +61,6 @@ public class ManagerMenu : MonoBehaviour {
 	 * Actualmente lo coloca en la ultima posicion de la lista
 	 * */
 	public void Agregar(GameObject instantElement){
-
 		instantElement.transform.SetParent(ScrollPanel.transform, false);
 		RectTransform rt = instantElement.GetComponent<RectTransform> ();
 		rt.sizeDelta = new Vector2 (185, 185);
@@ -69,11 +68,15 @@ public class ManagerMenu : MonoBehaviour {
 		//instantElement.transform.localScale = EscalaInicial;
 
 		ListaElementos.AddLast(instantElement);
-
+      
 		if (ListaElementos.Count == 1) {
 			ElementoActual = ListaElementos.First;
-			Tema nuevoActual = ListaElementos.First.Value.GetComponent<Tema>();
-			nuevoActual.EsActual = true;
+			Tema mtActual = ListaElementos.First.Value.GetComponent<Tema>();
+			Elemento meActual = ListaElementos.First.Value.GetComponent<Elemento>();
+			if(mtActual != null)
+				mtActual.EsActual = true;
+			else
+				meActual.EsActual = true;
 		}
 
 		NuevoElemento();
@@ -128,7 +131,7 @@ public class ManagerMenu : MonoBehaviour {
 				EscalaInicial.y *= CambioEscala;
 
 				Tema mt = ElementoActual.Value.GetComponent<Tema>();
-				if(mt.Seleccionado){
+				if(mt != null && mt.Seleccionado){
 					LimpiarMenuVertical();
 					mt.AbrirContenido();
 				}
@@ -242,7 +245,7 @@ public class ManagerMenu : MonoBehaviour {
 				EscalaInicial.y /= CambioEscala;
 
 				Tema mt = ElementoActual.Value.GetComponent<Tema>();
-				if(mt.Seleccionado){
+				if(mt != null && mt.Seleccionado){
 					LimpiarMenuVertical();
 					mt.AbrirContenido();
 				}
@@ -322,15 +325,15 @@ public class ManagerMenu : MonoBehaviour {
 		elemento.transform.localScale = nuevaEscala;
 	}
 
-	public void DetectarPosicion(Tema temaMenu, int eje){
+	public void DetectarPosicion(GameObject objeto, int eje){
 		if (eje == 0) {
-			if (EstaAdelante (temaMenu)) {
+			if (EstaAdelante (objeto)) {
 				Avanzar ();
 			} else {
 				Retroceder ();
 			}
 		} else {
-			if (EstaAdelante (temaMenu)) {
+			if (EstaAbajo (objeto)) {
 				AvanzarDetalle ();
 			} else {
 				RetrocederDetalle ();
@@ -338,12 +341,49 @@ public class ManagerMenu : MonoBehaviour {
 		}
 	}
 
-	public bool EstaAdelante(Tema temaMenu){
+	public bool EstaAdelante(GameObject temaMenu){
 		LinkedListNode<GameObject> actual = ElementoActual.Next;
 		while (actual != null) {
 			Tema mtActual = actual.Value.GetComponent<Tema>();
-			if(mtActual.Nombre.Equals(temaMenu.Nombre))
-				return true;
+			Elemento meActual = actual.Value.GetComponent<Elemento>();
+			Tema mtMenu = temaMenu.GetComponent<Tema>();
+			Elemento meMenu = temaMenu.GetComponent<Elemento>();
+			if(mtActual != null){
+				if(mtMenu != null){
+					if(mtActual.Nombre.Equals(mtMenu.Nombre))
+						return true;
+				}
+			}
+			else{
+				if(meMenu != null){
+					if(meActual.Nombre.Equals(meMenu.Nombre))
+						return true;
+				}
+			}
+			actual = actual.Next;
+		}
+		return false;
+	}
+
+	public bool EstaAbajo(GameObject elementoVertical){
+		LinkedListNode<GameObject> actual = DetalleActual.Next;
+		while (actual != null) {
+			Tema mtActual = actual.Value.GetComponent<Tema>();
+			Elemento meActual = actual.Value.GetComponent<Elemento>();
+			Tema mtVertical = elementoVertical.GetComponent<Tema>();
+			Elemento meVertical = elementoVertical.GetComponent<Elemento>();
+			if(mtActual != null){
+				if(mtVertical != null){
+					if(mtActual.Nombre.Equals(mtVertical.Nombre))
+						return true;
+				}
+			}
+			else{
+				if(meVertical != null){
+					if(meActual.Nombre.Equals(meVertical.Nombre))
+						return true;
+				}
+			}
 			actual = actual.Next;
 		}
 		return false;
@@ -355,7 +395,8 @@ public class ManagerMenu : MonoBehaviour {
 
 		foreach (GameObject item in ListaElementos) {
 			Tema mt = item.GetComponent<Tema>();
-			mt.Seleccionado = true;
+			if(mt != null)
+				mt.Seleccionado = true;
 		}
 		//GameObject detalle = GameObject.Find ("DetailCanvas");
 		//ManagerDetail md = detalle.GetComponent<ManagerDetail> ();
@@ -380,7 +421,8 @@ public class ManagerMenu : MonoBehaviour {
 
 		foreach (GameObject item in ListaElementos) {
 			Tema mt = item.GetComponent<Tema>();
-			mt.Seleccionado = false;
+			if(mt != null)
+				mt.Seleccionado = false;
 		}
 		LimpiarMenuVertical ();
 		/**PilaListas.Pop ();
@@ -400,13 +442,32 @@ public class ManagerMenu : MonoBehaviour {
 		PilaListas.Push (ListaElementos);**/
 	}
 
+	public void ReemplazarNivel(){
+		PilaListas.Push (ListaElementos);
+		LimpiarMenuHorizontal ();
+        LinkedList<GameObject> temp = ListaDetalle;
+        LimpiarMenuVertical();
+        foreach (GameObject objeto in temp){
+            objeto.SetActive(true);
+            Tema esTema = objeto.GetComponent<Tema>();
+			Elemento esElemento = objeto.GetComponent<Elemento>();
+
+			if(esTema != null)
+				esTema.EnDetalle = false;
+			else
+				esElemento.EnDetalle = false;
+
+			Agregar(objeto);
+		}
+	}
+
 	public void LimpiarMenuHorizontal(){
 		foreach (GameObject nodo in ListaElementos) {
 			nodo.SetActive(false);
 		}
 
 		ListaElementos = new LinkedList<GameObject> ();
-		SetParametrosIniciales ();
+        PosInicial = Vector3.zero;
 	}
 
 	public void LimpiarMenuVertical(){
@@ -482,7 +543,7 @@ public class ManagerMenu : MonoBehaviour {
 	}
 
 	public void SetParametrosIniciales(){
-		PosInicial = ScrollPanel.transform.localPosition;
+		PosInicial = Vector3.zero;
 		PosDetalle = Vector3.zero;
 		SaltoElemento = AnchoElementos + DistanciaElementos;
 		EscalaInicial = new Vector3 (1.0f, 1.0f, 1.0f);

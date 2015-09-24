@@ -8,8 +8,9 @@ public class Elemento : MonoBehaviour {
 	public	bool		Completado;
 	public	bool		EnDetalle;
 	public 	bool		EsActual;
-	
-	private	GameObject	DetailCanvas;
+    public  Tema        TemaPadre;
+
+    private	GameObject	DetailCanvas;
 	private	GameObject	MainCanvas;
 	
 	void Awake () {
@@ -31,13 +32,20 @@ public class Elemento : MonoBehaviour {
 		ManagerDetail detale = DetailCanvas.GetComponent<ManagerDetail> ();
 		
 		if (EnDetalle) {
+			if (EsActual) {
+				MostrarInfo ();
+			} else {
+				menu.DetectarPosicion(this.gameObject,1);
+				MostrarInfo ();
+			}
+		} else {
 			if(EsActual){
-				MostrarInfo();
+
 			}
 			else{
-				menu.AvanzarDetalle();
-				MostrarInfo();
+				menu.DetectarPosicion(this.gameObject,0);
+				menu.LimpiarMenuVertical();
 			}
-		} 
+		}
 	}	
 }
