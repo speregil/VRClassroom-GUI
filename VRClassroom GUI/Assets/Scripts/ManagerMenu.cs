@@ -452,14 +452,52 @@ public class ManagerMenu : MonoBehaviour {
             Tema esTema = objeto.GetComponent<Tema>();
 			Elemento esElemento = objeto.GetComponent<Elemento>();
 
-			if(esTema != null)
-				esTema.EnDetalle = false;
-			else
-				esElemento.EnDetalle = false;
+            if (esTema != null)
+            {
+                esTema.EnDetalle = false;
+                esTema.EsActual = false;
+                esTema.Seleccionado = false;
+            }
+            else
+            {
+                esElemento.EnDetalle = false;
+                esElemento.EsActual = false;
+            }
 
 			Agregar(objeto);
 		}
 	}
+
+    public bool RecuperarNivel()
+    {
+        LimpiarMenuHorizontal();
+        LinkedList<GameObject> temp = PilaListas.Pop();
+        foreach(GameObject item in temp)
+        {
+            item.SetActive(true);
+            Tema esTema = item.GetComponent<Tema>();
+            Elemento esElemento = item.GetComponent<Elemento>();
+
+            if (esTema != null)
+            {
+                esTema.EnDetalle = false;
+                esTema.EsActual = false;
+                esTema.Seleccionado = false;
+            }
+            else
+            {
+                esElemento.EnDetalle = false;
+                esElemento.EsActual = false;
+            }
+
+            Agregar(item);
+        }
+
+        if (PilaListas.Count < 1)
+            return true;
+
+        return false;
+    }
 
 	public void LimpiarMenuHorizontal(){
 		foreach (GameObject nodo in ListaElementos) {

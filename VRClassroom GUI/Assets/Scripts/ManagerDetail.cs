@@ -171,13 +171,23 @@ public class ManagerDetail : MonoBehaviour {
 	}
 
 	public void SubirNivel(){
-		Desplazado = false;
-		DesplazarMenu (1);
-		Button btnSubir = BotonSubir.GetComponent<Button>();
-		btnSubir.interactable = false;
+        GameObject menu = GameObject.Find("MainCanvas");
+        ManagerMenu mm = menu.GetComponent<ManagerMenu>();
 
-		GameObject menu = GameObject.Find ("MainCanvas");
-		ManagerMenu mm = menu.GetComponent<ManagerMenu> ();
-		mm.SubirNivel ();
+        if (Desplazado)
+        {
+            Desplazado = false;
+            DesplazarMenu(1);
+            mm.SubirNivel();
+        }
+        else
+        {
+            if (mm.RecuperarNivel())
+            {
+                Button btnSubir = BotonSubir.GetComponent<Button>();
+                btnSubir.interactable = false;
+            }
+        }
+		
 	}
 }
