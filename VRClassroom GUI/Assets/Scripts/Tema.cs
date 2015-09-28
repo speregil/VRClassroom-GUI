@@ -71,6 +71,31 @@ public class Tema : MonoBehaviour{
 		MostrarInfo ();
 	}
 
+	public void CalcularProgreso(){
+		int totalElementos = Contenido.Count;
+		int totalCompleto = 0;
+		foreach (GameObject item in Contenido) {
+			Tema mt = item.GetComponent<Tema>();
+			Elemento me = item.GetComponent<Elemento>();
+
+			if(mt != null){
+				if(mt.PorcentajeCompleto >= 1)
+					totalCompleto += 1;
+			}
+			else{
+				if(me.Completado)
+					totalCompleto += 1;
+			}
+		}
+
+		PorcentajeCompleto = (totalCompleto * 100) / totalElementos;
+
+		if (TemaPadre != null) {
+			Tema mt = TemaPadre.GetComponent<Tema>();
+			mt.CalcularProgreso();
+		}
+	}
+
 	public void EnClick(){
 		ManagerMenu menu = MainCanvas.GetComponent<ManagerMenu> ();
 		ManagerDetail detale = DetailCanvas.GetComponent<ManagerDetail> ();
@@ -87,9 +112,14 @@ public class Tema : MonoBehaviour{
 			}
 		} else {
 			if(EsActual){
-				AbrirContenido();
-				menu.BajarNivel();
-				detale.BajarNivel();
+				if(Seleccionado){
+					MostrarInfo();
+				}
+				else{
+					AbrirContenido();
+					menu.BajarNivel();
+					detale.BajarNivel();
+				}
 			}
 			else{
 				menu.DetectarPosicion(this.gameObject,0);

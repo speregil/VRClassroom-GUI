@@ -36,7 +36,7 @@ public class PanelInformacion : MonoBehaviour {
 		label.text = "No. de elementos: " + tm.NumElementos;
 
 		label = PorcentajeTema.GetComponent<Text> ();
-		label.text = tm.PorcentajeCompleto + "% Completado";
+		label.text = (tm.PorcentajeCompleto) + "% Completado";
 	}
 
 	public void MostrarInfoElemento(GameObject temaSeleccionado){
@@ -60,6 +60,11 @@ public class PanelInformacion : MonoBehaviour {
 
 	public void ActivarInfoElemento(bool activar){
         InfoElemento.SetActive(activar);
+	}
+
+	public void MarcarCompletado(){
+		Toggle tg = ToogleCompletado.GetComponentInChildren<Toggle>();
+		tg.isOn = true;
 	}
 
 	public void LimpiarInfo(){

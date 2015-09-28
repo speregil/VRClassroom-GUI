@@ -415,7 +415,7 @@ public class ManagerMenu : MonoBehaviour {
 		PilaListas.Push (ListaElementos);**/
 	}
 
-	public void SubirNivel(){
+	public bool SubirNivel(){
 		Desplazado = false;
 		DesplazarMenu (1);
 
@@ -425,6 +425,11 @@ public class ManagerMenu : MonoBehaviour {
 				mt.Seleccionado = false;
 		}
 		LimpiarMenuVertical ();
+
+		if (PilaListas.Count < 1)
+			return true;
+		
+		return false;
 		/**PilaListas.Pop ();
 		LimpiarMenu ();
 		ManagerDetail md = this.gameObject.GetComponent<ManagerDetail> ();
@@ -550,12 +555,15 @@ public class ManagerMenu : MonoBehaviour {
 				esTema.EnDetalle = true;
 			} else {
 				esElemento.EnDetalle = true;
+				SeleccionarItem(esElemento.gameObject, false);
 			}
 
 			item.transform.SetParent(ItemPanel.transform, false);
 			RectTransform rt = item.GetComponent<RectTransform> ();
 			rt.sizeDelta = new Vector2 (185, 185);
 			item.transform.localPosition = PosDetalle;
+			item.transform.localRotation = Quaternion.identity;
+			item.transform.localScale = new Vector3 (1.0f, 1.0f, 1.0f);
 
 			PosDetalle.y -= SaltoElemento;
 

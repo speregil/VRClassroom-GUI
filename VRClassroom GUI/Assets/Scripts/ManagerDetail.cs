@@ -178,7 +178,10 @@ public class ManagerDetail : MonoBehaviour {
         {
             Desplazado = false;
             DesplazarMenu(1);
-            mm.SubirNivel();
+            if(mm.SubirNivel()){
+				Button btnSubir = BotonSubir.GetComponent<Button>();
+				btnSubir.interactable = false;
+			}
         }
         else
         {

@@ -27,6 +27,17 @@ public class Elemento : MonoBehaviour {
 		panel.MostrarInfoElemento (this.gameObject);
 	}
 
+	public void Completar(){
+		Completado = true;
+		PanelInformacion panel = DetailCanvas.GetComponentInChildren<PanelInformacion> ();
+		panel.MarcarCompletado ();
+
+		if (TemaPadre != null) {
+			Tema mt = TemaPadre.GetComponent<Tema>();
+			mt.CalcularProgreso();
+		}
+	}
+
 	public void EnClick(){
 		ManagerMenu menu = MainCanvas.GetComponent<ManagerMenu> ();
 		ManagerDetail detale = DetailCanvas.GetComponent<ManagerDetail> ();
@@ -34,17 +45,20 @@ public class Elemento : MonoBehaviour {
 		if (EnDetalle) {
 			if (EsActual) {
 				MostrarInfo ();
+				Completar();
 			} else {
 				menu.DetectarPosicion(this.gameObject,1);
 				MostrarInfo ();
 			}
 		} else {
 			if(EsActual){
-
+				MostrarInfo ();
+				Completar ();
 			}
 			else{
 				menu.DetectarPosicion(this.gameObject,0);
 				menu.LimpiarMenuVertical();
+				MostrarInfo ();
 			}
 		}
 	}	
