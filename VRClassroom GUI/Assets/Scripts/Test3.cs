@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using ProgressBar;
 
 public class Test3 : MonoBehaviour {
 
@@ -62,4 +63,9 @@ public class Test3 : MonoBehaviour {
         }
         return nuevoElemento;
     }
+
+	public void progreso(){
+		ProgressBarBehaviour pbg = GameObject.Find ("Panel").GetComponent<ProgressBarBehaviour>();
+		pbg.IncrementValue (5.0f);
+	}
 }
