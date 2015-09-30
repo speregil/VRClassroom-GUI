@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using ProgressBar;
 
 public class PanelInformacion : MonoBehaviour {
 
@@ -37,6 +38,8 @@ public class PanelInformacion : MonoBehaviour {
 
 		label = PorcentajeTema.GetComponent<Text> ();
 		label.text = (tm.PorcentajeCompleto) + "% Completado";
+
+        AjustarBarra(tm.PorcentajeCompleto);
 	}
 
 	public void MostrarInfoElemento(GameObject temaSeleccionado){
@@ -67,7 +70,16 @@ public class PanelInformacion : MonoBehaviour {
 		tg.isOn = true;
 	}
 
-	public void LimpiarInfo(){
+    public void AjustarBarra(float porcentaje)
+    {
+        ProgressBarBehaviour pbg = this.gameObject.GetComponentInChildren<ProgressBarBehaviour>();
+        float valorActual = pbg.Value;
+        pbg.DecrementValue(valorActual);
+
+        pbg.IncrementValue(porcentaje);
+    }
+
+    public void LimpiarInfo(){
 		ActivarInfoElemento (false);
 		ActivarInfoTema (false);
 	}

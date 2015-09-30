@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using ProgressBar;
 
 public class ManagerDetail : MonoBehaviour {
 
 	public  	GameObject						PrefElemento;
 	public  	GameObject						BotonSubir;
+    public      GameObject                      BarraPorcentaje;
 	public		GameObject						PanelItems;
 	public		GameObject						MenuDetalle;
 	public		float							Desplazamiento;
