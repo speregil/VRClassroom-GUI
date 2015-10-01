@@ -38,28 +38,39 @@ public class Elemento : MonoBehaviour {
 		}
 	}
 
-	public void EnClick(){
-		ManagerMenu menu = MainCanvas.GetComponent<ManagerMenu> ();
-		ManagerDetail detale = DetailCanvas.GetComponent<ManagerDetail> ();
-		
-		if (EnDetalle) {
-			if (EsActual) {
-				MostrarInfo ();
-				Completar();
-			} else {
-				menu.DetectarPosicion(this.gameObject,1);
-				MostrarInfo ();
-			}
-		} else {
-			if(EsActual){
-				MostrarInfo ();
-				Completar ();
-			}
-			else{
-				menu.DetectarPosicion(this.gameObject,0);
-				menu.LimpiarMenuVertical();
-				MostrarInfo ();
-			}
-		}
-	}	
+    public void EnClick()
+    {
+        ManagerMenu menu = MainCanvas.GetComponent<ManagerMenu>();
+
+        if (!menu.EnAnimacion)
+        {
+            if (EnDetalle)
+            {
+                if (EsActual)
+                {
+                    MostrarInfo();
+                    Completar();
+                }
+                else
+                {
+                    menu.DetectarPosicion(this.gameObject, 1);
+                    MostrarInfo();
+                }
+            }
+            else
+            {
+                if (EsActual)
+                {
+                    MostrarInfo();
+                    Completar();
+                }
+                else
+                {
+                    menu.DetectarPosicion(this.gameObject, 0);
+                    menu.LimpiarMenuVertical();
+                    MostrarInfo();
+                }
+            }
+        }
+    }	
 }

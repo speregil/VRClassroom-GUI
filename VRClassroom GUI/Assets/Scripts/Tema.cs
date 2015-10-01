@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using System;
 using System.Collections.Generic;
+using ProgressBar;
 
 public class Tema : MonoBehaviour{
 	
@@ -90,6 +91,11 @@ public class Tema : MonoBehaviour{
 
 		PorcentajeCompleto = (totalCompleto * 100) / totalElementos;
 
+        ProgressBarBehaviour pbg = this.gameObject.GetComponentInChildren<ProgressBarBehaviour>();
+        float valorActual = pbg.Value;
+        pbg.DecrementValue(valorActual);
+        pbg.IncrementValue(PorcentajeCompleto);
+
 		if (TemaPadre != null) {
 			Tema mt = TemaPadre.GetComponent<Tema>();
 			mt.CalcularProgreso();
@@ -100,30 +106,42 @@ public class Tema : MonoBehaviour{
 		ManagerMenu menu = MainCanvas.GetComponent<ManagerMenu> ();
 		ManagerDetail detale = DetailCanvas.GetComponent<ManagerDetail> ();
 
-		if (EnDetalle) {
-			if(EsActual){
-                menu.ReemplazarNivel();
-                menu.SubirNivel();
-                detale.SubirNivel();
+        if (!menu.EnAnimacion)
+        {
+            if (EnDetalle)
+            {
+                if (EsActual)
+                {
+                    menu.ReemplazarNivel();
+                    menu.SubirNivel();
+                    detale.SubirNivel();
+                }
+                else
+                {
+                    menu.DetectarPosicion(this.gameObject, 1);
+                    MostrarInfo();
+                }
             }
-			else{
-				menu.DetectarPosicion(this.gameObject,1);
-				MostrarInfo();
-			}
-		} else {
-			if(EsActual){
-				if(Seleccionado){
-					MostrarInfo();
-				}
-				else{
-					AbrirContenido();
-					menu.BajarNivel();
-					detale.BajarNivel();
-				}
-			}
-			else{
-				menu.DetectarPosicion(this.gameObject,0);
-			}
-		}
+            else
+            {
+                if (EsActual)
+                {
+                    if (Seleccionado)
+                    {
+                        MostrarInfo();
+                    }
+                    else
+                    {
+                        AbrirContenido();
+                        menu.BajarNivel();
+                        detale.BajarNivel();
+                    }
+                }
+                else
+                {
+                    menu.DetectarPosicion(this.gameObject, 0);
+                }
+            }
+        }
 	}	
 }

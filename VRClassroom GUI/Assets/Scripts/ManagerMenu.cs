@@ -22,6 +22,7 @@ public class ManagerMenu : MonoBehaviour {
 	public 		float							velRotacion;
 	public 		float							primeraRotacion;		//Angulo de la primera rotacion que hacen los elementos al moverse hacia la izquierda
 	public 		float							Desplazamiento;
+    public      bool                            EnAnimacion;
 	private		Stack<LinkedList<GameObject>>	PilaListas;				//Pila que maneja las distintas jerarquias del sistema de archivos
 	private 	LinkedList<GameObject>			ListaElementos;			//Lista logica que contiene y maneja los elementos
 	private 	LinkedList<GameObject>			ListaDetalle;
@@ -46,6 +47,7 @@ public class ManagerMenu : MonoBehaviour {
 		//PilaListas.Push (ListaElementos);
 		ElementoActual = null;
 		Desplazado = false;
+        EnAnimacion = false;
 	}
 
 	//-----------------------------------------------------------------------------------
@@ -176,6 +178,7 @@ public class ManagerMenu : MonoBehaviour {
 		Vector3 nuevaPos = elemento.transform.position;
 		nuevaPos.x -= SaltoElemento;
 		iTween.MoveTo (elemento, nuevaPos,velMovimiento);
+        StartCoroutine(Esperar(1.02f));
 	}
 
 	/**
@@ -185,7 +188,8 @@ public class ManagerMenu : MonoBehaviour {
 		Vector3 nuevaPos = elemento.transform.position;
 		nuevaPos.z -= SaltoElemento;
 		iTween.MoveTo (elemento, nuevaPos,velMovimiento);
-	}
+        StartCoroutine(Esperar(1.02f));
+    }
 
 	/**
 	 * Corutina que mueve hacia la izquierda un espacio el elemento pasado por parametro
@@ -194,19 +198,22 @@ public class ManagerMenu : MonoBehaviour {
 		Vector3 nuevaPos = elemento.transform.position;
 		nuevaPos.z += SaltoElemento;
 		iTween.MoveTo (elemento, nuevaPos,velMovimiento);
-	}
+        StartCoroutine(Esperar(1.02f));
+    }
 
 	public void MoverArriba(GameObject elemento){
 		Vector3 nuevaPos = elemento.transform.position;
 		nuevaPos.y += SaltoElemento;
 		iTween.MoveTo (elemento, nuevaPos,velMovimiento);
-	}
+        StartCoroutine(Esperar(1.02f));
+    }
 
 	public void SaltarFila(GameObject elemento){
 		Vector3 nuevaPos = elemento.transform.position;
 		nuevaPos.y += SaltoElemento*1.5f;
 		iTween.MoveTo (elemento, nuevaPos,velMovimiento);
-	}
+        StartCoroutine(Esperar(1.02f));
+    }
 
 	/**
 	 * Mueve la seleccion actual del menu de a un elemento en direccion al inicio de la lista
@@ -292,24 +299,28 @@ public class ManagerMenu : MonoBehaviour {
 		Vector3 nuevaPos = elemento.transform.position;
 		nuevaPos.x += SaltoElemento;
 		iTween.MoveTo (elemento, nuevaPos,velMovimiento);
-	}
+        StartCoroutine(Esperar(1.02f));
+    }
 
 	public void MoverAbajo(GameObject elemento){
 		Vector3 nuevaPos = elemento.transform.position;
 		nuevaPos.y -= SaltoElemento;
 		iTween.MoveTo (elemento, nuevaPos,velMovimiento);
-	}
+        StartCoroutine(Esperar(1.02f));
+    }
 
 	public void BajarFila(GameObject elemento){
 		Vector3 nuevaPos = elemento.transform.position;
 		nuevaPos.y -= SaltoElemento*1.5f;
 		iTween.MoveTo (elemento, nuevaPos,velMovimiento);
-	}
+        StartCoroutine(Esperar(1.02f));
+    }
 
 	public void RotarElemento(GameObject elemento, float rotacion){
 		Vector3 rot = new Vector3 (0,rotacion,0);
 		iTween.RotateTo (elemento, rot, velRotacion);
-	}
+        StartCoroutine(Esperar(1.02f));
+    }
 
 	public void ReducirEscala(GameObject elemento){
 		Vector3 nuevaEscala = elemento.transform.localScale;
@@ -430,21 +441,6 @@ public class ManagerMenu : MonoBehaviour {
 			return true;
 		
 		return false;
-		/**PilaListas.Pop ();
-		LimpiarMenu ();
-		ManagerDetail md = this.gameObject.GetComponent<ManagerDetail> ();
-		md.LimpiarDetalle ();
-		LinkedList<GameObject> nuevoContenido = PilaListas.Pop();
-		foreach (GameObject item in nuevoContenido) {
-			Tema actual = item.GetComponent<Tema>();
-			if(actual !=null){
-				item.SetActive(true);
-				actual.EnDetalle = false;
-				actual.PrimerClick = false;
-				Agregar(item);
-			}
-		}
-		PilaListas.Push (ListaElementos);**/
 	}
 
 	public void ReemplazarNivel(){
@@ -594,4 +590,11 @@ public class ManagerMenu : MonoBehaviour {
 		SaltoElemento = AnchoElementos + DistanciaElementos;
 		EscalaInicial = new Vector3 (1.0f, 1.0f, 1.0f);
 	}
+
+    public IEnumerator Esperar(float tiempo)
+    {
+        EnAnimacion = true;
+        yield return new WaitForSeconds(tiempo);
+        EnAnimacion = false;
+    }
 }

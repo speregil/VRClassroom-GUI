@@ -176,23 +176,26 @@ public class ManagerDetail : MonoBehaviour {
         GameObject menu = GameObject.Find("MainCanvas");
         ManagerMenu mm = menu.GetComponent<ManagerMenu>();
 
-        if (Desplazado)
+        if (!mm.EnAnimacion)
         {
-            Desplazado = false;
-            DesplazarMenu(1);
-            if(mm.SubirNivel()){
-				Button btnSubir = BotonSubir.GetComponent<Button>();
-				btnSubir.interactable = false;
-			}
-        }
-        else
-        {
-            if (mm.RecuperarNivel())
+            if (Desplazado)
             {
-                Button btnSubir = BotonSubir.GetComponent<Button>();
-                btnSubir.interactable = false;
+                Desplazado = false;
+                DesplazarMenu(1);
+                if (mm.SubirNivel())
+                {
+                    Button btnSubir = BotonSubir.GetComponent<Button>();
+                    btnSubir.interactable = false;
+                }
             }
-        }
-		
+            else
+            {
+                if (mm.RecuperarNivel())
+                {
+                    Button btnSubir = BotonSubir.GetComponent<Button>();
+                    btnSubir.interactable = false;
+                }
+            }
+        }	
 	}
 }
