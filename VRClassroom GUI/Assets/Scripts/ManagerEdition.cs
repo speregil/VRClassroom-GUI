@@ -23,6 +23,7 @@ public class ManagerEdition : MonoBehaviour {
 		Text mText = nuevoTema.GetComponentInChildren<Text> ();
 		mText.text = nNombre;
 
+        nuevoTema.GetComponent<Collider>().enabled = false;
 		return nuevoTema;
 	}
 
@@ -35,7 +36,8 @@ public class ManagerEdition : MonoBehaviour {
 		Text mText = nuevoElemento.GetComponentInChildren<Text> ();
 		mText.text = nNombre;
 
-		return nuevoElemento;
+        nuevoElemento.GetComponent<Collider>().enabled = false;
+        return nuevoElemento;
 	}
 
 	public float GetPrefabWidth(){

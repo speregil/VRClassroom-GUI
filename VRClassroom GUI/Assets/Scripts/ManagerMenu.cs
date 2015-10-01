@@ -21,7 +21,8 @@ public class ManagerMenu : MonoBehaviour {
 	public		float							velMovimiento;			//Velocidad a la que se desplazan los elementos al moverse
 	public 		float							velRotacion;
 	public 		float							primeraRotacion;		//Angulo de la primera rotacion que hacen los elementos al moverse hacia la izquierda
-	public 		float							Desplazamiento;
+    public      float                           segundaRotacion;       //Angulo de la primera rotacion que hacen los elementos al moverse hacia la izquierda
+    public 		float							Desplazamiento;
     public      bool                            EnAnimacion;
 	private		Stack<LinkedList<GameObject>>	PilaListas;				//Pila que maneja las distintas jerarquias del sistema de archivos
 	private 	LinkedList<GameObject>			ListaElementos;			//Lista logica que contiene y maneja los elementos
@@ -67,6 +68,7 @@ public class ManagerMenu : MonoBehaviour {
 		RectTransform rt = instantElement.GetComponent<RectTransform> ();
 		rt.sizeDelta = new Vector2 (185, 185);
 		instantElement.transform.localPosition = PosInicial;
+        instantElement.GetComponent<Collider>().enabled = true;
 		//instantElement.transform.localScale = EscalaInicial;
 
 		ListaElementos.AddLast(instantElement);
@@ -111,6 +113,7 @@ public class ManagerMenu : MonoBehaviour {
 
 				if (anterior != null) {
 					MoverIzquierda (anterior.Value);
+                    RotarElemento(anterior.Value, segundaRotacion);
 				}
 
 				// Selecciona el siguiente elemento
@@ -123,7 +126,7 @@ public class ManagerMenu : MonoBehaviour {
 				}
 
 				while (anterior !=null) {
-					ReducirEscala (anterior.Value);
+					//ReducirEscala (anterior.Value);
 					MoverFrente (anterior.Value);
 					anterior = anterior.Previous;
 				}
@@ -230,7 +233,12 @@ public class ManagerMenu : MonoBehaviour {
 
 				MoverDerecha (anterior.Value);
 				RotarElemento (anterior.Value, 0);
-			
+			    
+                if(anterior.Previous != null)
+                {
+                    RotarElemento(anterior.Previous.Value, primeraRotacion);
+                }
+
 				// Selecciona el anterior elemento
 				SeleccionarItem (anterior.Value, true);
 				ElementoActual = anterior;
@@ -242,7 +250,7 @@ public class ManagerMenu : MonoBehaviour {
 
 				anterior = anterior.Previous;
 				while (anterior != null) {
-					AumetarEscala (anterior.Value);
+					//AumetarEscala (anterior.Value);
 					MoverAtras (anterior.Value);
 					anterior = anterior.Previous;
 				}
@@ -543,6 +551,7 @@ public class ManagerMenu : MonoBehaviour {
 	public void AbrirContenido(List<GameObject> listaElementos){
 		foreach (GameObject item in listaElementos) {
 			item.SetActive (true);
+            item.GetComponent<Collider>().enabled = true;
 			Tema esTema = item.GetComponent<Tema> ();
 			Elemento esElemento = item.GetComponent<Elemento> ();
 			
