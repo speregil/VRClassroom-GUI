@@ -65,6 +65,7 @@ public class Test3 : MonoBehaviour {
     }
 
 	public void progreso(){
+        Debug.Log("Entre");
 		ProgressBarBehaviour pbg = GameObject.Find ("Panel").GetComponent<ProgressBarBehaviour>();
 		pbg.IncrementValue (5.0f);
 	}

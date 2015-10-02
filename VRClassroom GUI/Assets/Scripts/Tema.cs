@@ -65,8 +65,6 @@ public class Tema : MonoBehaviour{
 	public void AbrirContenido(){
 		ManagerDetail detalle = DetailCanvas.GetComponent<ManagerDetail> ();
 		ManagerMenu menu = MainCanvas.GetComponent<ManagerMenu> ();
-
-		detalle.LimpiarDetalle ();
 		menu.AbrirContenido (Contenido);
 
 		MostrarInfo ();

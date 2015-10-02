@@ -23,7 +23,6 @@ public class CameraPointer : MonoBehaviour {
         {
             imgPointer.color = Color.white;
             seleccionActual = hit.collider.gameObject;
-            Debug.Log(seleccionActual.name);
         }
         else
         {
