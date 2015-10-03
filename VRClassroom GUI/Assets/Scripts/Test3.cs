@@ -32,6 +32,15 @@ public class Test3 : MonoBehaviour {
         GameObject Elemento1aa = CrearElemento("Elemento 1aa", "Descripcion 1aa", Tema1a);
         GameObject Elemento1ab = CrearElemento("Elemento 1ab", "Descripcion 1ab", Tema1a);
 
+        GameObject Elemento2a = CrearElemento("Elemento 2a", "Descripcion 2a", Tema2);
+        GameObject Elemento2b = CrearElemento("Elemento 2b", "Descripcion 2b", Tema2);
+        GameObject Elemento2c = CrearElemento("Elemento 2c", "Descripcion 2c", Tema2);
+        GameObject Elemento2d = CrearElemento("Elemento 2d", "Descripcion 2d", Tema2);
+        GameObject Elemento2e = CrearElemento("Elemento 2e", "Descripcion 2e", Tema2);
+        GameObject Elemento2f = CrearElemento("Elemento 2f", "Descripcion 2f", Tema2);
+        GameObject Elemento2g = CrearElemento("Elemento 2g", "Descripcion 2g", Tema2);
+        GameObject Elemento2h = CrearElemento("Elemento 2h", "Descripcion 2h", Tema2);
+
         menu.Agregar(Tema1);
         menu.Agregar(Tema2);
         menu.Agregar(Tema3);
