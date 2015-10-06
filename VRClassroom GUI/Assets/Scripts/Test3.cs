@@ -40,6 +40,7 @@ public class Test3 : MonoBehaviour {
         GameObject Elemento2f = CrearElemento("Elemento 2f", "Descripcion 2f", Tema2);
         GameObject Elemento2g = CrearElemento("Elemento 2g", "Descripcion 2g", Tema2);
         GameObject Elemento2h = CrearElemento("Elemento 2h", "Descripcion 2h", Tema2);
+        GameObject Elemento2i = CrearElemento("Elemento 2i", "Descripcion 2i", Tema2);
 
         menu.Agregar(Tema1);
         menu.Agregar(Tema2);

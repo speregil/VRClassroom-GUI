@@ -127,6 +127,7 @@ public class Tema : MonoBehaviour{
                     if (Seleccionado)
                     {
                         MostrarInfo();
+                        detale.LimpiarDetalle();
                         detale.AbrirInfoProgreso(Nombre, Contenido);
                     }
                     else
@@ -138,6 +139,7 @@ public class Tema : MonoBehaviour{
                 }
                 else
                 {
+                    detale.LimpiarDetalle();
                     menu.DetectarPosicion(this.gameObject, 0);
                 }
             }

@@ -14,6 +14,8 @@ public class ManagerDetail : MonoBehaviour {
     public      GameObject                      Grafica2;
     public      GameObject                      Grafica3;
     public      GameObject                      Grafica4;
+    public      GameObject                      BotonPendientes;
+    public      GameObject                      BotonGuardados;
     public		float							Desplazamiento;
     private     Stack<GameObject>               DatosGuardados;
 	private 	List<GameObject>			    DatosPendientes;
@@ -156,6 +158,9 @@ public class ManagerDetail : MonoBehaviour {
                 }
             }
         }
+
+        if (DatosPendientes.Count > 0)
+            BotonPendientes.SetActive(true);
     }
 
     public void MostarDatosPendientes()
@@ -168,8 +173,15 @@ public class ManagerDetail : MonoBehaviour {
             DatosGuardados.Push(item);
         }
 
+        BotonGuardados.SetActive(true);
+
         Text titulo = PanelProgreso.GetComponentInChildren<Text>();
         AbrirInfoProgreso(titulo.text, listaActual);
+
+        if (DatosPendientes.Count > 0)
+            BotonPendientes.SetActive(true);
+        else
+            BotonPendientes.SetActive(false);
     }
 
     public void MostrarDatosGuardados()
@@ -187,6 +199,11 @@ public class ManagerDetail : MonoBehaviour {
 
         Text titulo = PanelProgreso.GetComponentInChildren<Text>();
         AbrirInfoProgreso(titulo.text, datosRecuperados);
+
+        if (DatosGuardados.Count > 0)
+            BotonGuardados.SetActive(true);
+        else
+            BotonGuardados.SetActive(false);
     }
 
     public void LimpiarDetalle()
@@ -194,6 +211,8 @@ public class ManagerDetail : MonoBehaviour {
         DatosActuales = new GameObject[4];
         DatosPendientes = new List<GameObject>();
         DatosGuardados = new Stack<GameObject>();
+        BotonGuardados.SetActive(false);
+        BotonPendientes.SetActive(false);
     }
 
     public void DesplazarMenu(int posicion){
