@@ -417,21 +417,6 @@ public class ManagerMenu : MonoBehaviour {
 			if(mt != null)
 				mt.Seleccionado = true;
 		}
-		//GameObject detalle = GameObject.Find ("DetailCanvas");
-		//ManagerDetail md = detalle.GetComponent<ManagerDetail> ();
-		//md.DesplazarMenu (1);
-		//List<GameObject> nuevoContenido = temaPadre.Contenido;
-		//LimpiarMenu ();
-		/**foreach (GameObject item in nuevoContenido) {
-			Tema actual = item.GetComponent<Tema>();
-			if(actual !=null){
-				item.SetActive(true);
-				actual.EnDetalle = false;
-				actual.PrimerClick = false;
-				Agregar(item);
-			}
-		}
-		PilaListas.Push (ListaElementos);**/
 	}
 
 	public bool SubirNivel(){
@@ -532,20 +517,16 @@ public class ManagerMenu : MonoBehaviour {
 		Elemento mElemento = item.GetComponent<Elemento>();
 
 		if (seleccionar) {
-			Image imgComp = item.GetComponent<Image> ();
-			imgComp.color = Color.red;
-			if(mTema !=null)
-				mTema.EsActual = true;
-			else
-				mElemento.EsActual = true;
+            if (mTema != null)
+                mTema.Seleccionar(true);
+            else
+                mElemento.Seleccionar(true);
 		} else {
-			Image imgComp = item.GetComponent<Image> ();
-			imgComp.color = Color.blue;
 			if(mTema !=null)
-				mTema.EsActual = false;
-			else
-				mElemento.EsActual = false;
-		}
+                mTema.Seleccionar(false);
+            else
+                mElemento.Seleccionar(false);
+        }
 	}
 
 	public void AbrirContenido(List<GameObject> listaElementos){

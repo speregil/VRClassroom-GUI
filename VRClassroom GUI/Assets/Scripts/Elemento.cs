@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class Elemento : MonoBehaviour {
@@ -9,6 +10,8 @@ public class Elemento : MonoBehaviour {
 	public	bool		EnDetalle;
 	public 	bool		EsActual;
     public  Tema        TemaPadre;
+    public  Sprite      sprNormal;
+    public  Sprite      sprActual;
 
     private	GameObject	DetailCanvas;
 	private	GameObject	MainCanvas;
@@ -37,6 +40,16 @@ public class Elemento : MonoBehaviour {
 			mt.CalcularProgreso();
 		}
 	}
+
+    public void Seleccionar(bool seleccion)
+    {
+        Image img = GetComponent<Image>();
+        EsActual = seleccion;
+        if (seleccion)
+            img.sprite = sprActual;
+        else
+            img.sprite = sprNormal;
+    }
 
     public void EnClick()
     {

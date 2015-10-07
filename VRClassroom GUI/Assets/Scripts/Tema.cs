@@ -17,6 +17,8 @@ public class Tema : MonoBehaviour{
 	public 		bool				Desplazado;
 	public		List<GameObject>	Contenido;
 	public		Tema				TemaPadre;
+    public      Sprite              sprNormal;
+    public      Sprite              sprActual;
 
 	private		GameObject			DetailCanvas;
 	private		GameObject			MainCanvas;
@@ -99,6 +101,16 @@ public class Tema : MonoBehaviour{
 			mt.CalcularProgreso();
 		}
 	}
+
+    public void Seleccionar(bool seleccion)
+    {
+        Image img = GetComponent<Image>();
+        EsActual = seleccion;
+        if (seleccion)
+            img.sprite = sprActual;
+        else
+            img.sprite = sprNormal;
+    }
 
 	public void EnClick(){
 		ManagerMenu menu = MainCanvas.GetComponent<ManagerMenu> ();
