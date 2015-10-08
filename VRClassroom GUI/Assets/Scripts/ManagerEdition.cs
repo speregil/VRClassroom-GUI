@@ -7,10 +7,22 @@ public class ManagerEdition : MonoBehaviour {
 
 	public	GameObject	PrefTema;
 	public	GameObject	PrefElemento;
+    public  GameObject  MenuCrear;
+    public  GameObject  MainOptions;
+    public  GameObject  PanelCrear;
+    public  GameObject  Principal;
+    public  GameObject  Detalle;
+    private string      Estado;
 
-	// Use this for initialization
-	void Start () {
-	
+    private const string ABIERTO = "ABIERTO";
+    private const string CERRADO = "CERRADO";
+    private const string INPUT = "INPUT";
+    private const string CREAR_TEMA = "CREAR_TEMA";
+    private const string CREAR_ELEMENTO = "CREAR_ELEMENTO";
+
+    // Use this for initialization
+    void Start () {
+        Estado = CERRADO;
 	}
 
 	public GameObject CrearTema(string nNombre, string nAutor, DateTime nFecha){
@@ -39,6 +51,40 @@ public class ManagerEdition : MonoBehaviour {
         nuevoElemento.GetComponent<Collider>().enabled = false;
         return nuevoElemento;
 	}
+
+    public void AbrirMenuCrear()
+    {
+        MenuCrear.SetActive(true);
+        Principal.SetActive(false);
+        Detalle.SetActive(false);
+        Estado = ABIERTO;
+    }
+
+    public void AbrirInputCrear()
+    {
+        MainOptions.SetActive(false);
+        PanelCrear.SetActive(true);
+        Estado = INPUT;
+    }
+    public void Volver()
+    {
+        switch (Estado)
+        {
+            case ABIERTO:
+                Principal.SetActive(true);
+                Detalle.SetActive(true);
+                MenuCrear.SetActive(false);
+                break;
+            case INPUT:
+                MainOptions.SetActive(true);
+                PanelCrear.SetActive(false);
+                Estado = ABIERTO;
+                break;
+            default:
+                break;
+        }
+        
+    }
 
 	public float GetPrefabWidth(){
 		GameObject testPrefab = GameObject.Instantiate (PrefTema);
