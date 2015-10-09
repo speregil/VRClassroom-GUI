@@ -38,6 +38,12 @@ public class Tema : MonoBehaviour{
 		Seleccionado = false;
 	}
 
+   /* public void InicializarReferencias()
+    {
+        DetailCanvas = GameObject.Find("DetailCanvas");
+        MainCanvas = GameObject.Find("MainCanvas");
+    }*/
+
 	public void AgregarContenido(GameObject nuevoContenido){
 		Elemento esElemento = nuevoContenido.GetComponent<Elemento>();
 

@@ -574,6 +574,27 @@ public class ManagerMenu : MonoBehaviour {
 		}
 	}
 
+    public void MostarMenu(bool mostrar)
+    {
+        ItemView.SetActive(mostrar);
+    }
+
+    public Tema PadreActual()
+    {
+        if (ElementoActual != null)
+        {
+            Tema mt = ElementoActual.Value.GetComponent<Tema>();
+            Elemento me = ElementoActual.Value.GetComponent<Elemento>();
+
+            if (mt != null)
+                return mt.TemaPadre;
+
+            return me.TemaPadre;
+        }
+
+        return null;
+    }
+
 	public void SetParametrosIniciales(){
 		PosInicial = Vector3.zero;
 		PosDetalle = Vector3.zero;

@@ -5,18 +5,17 @@ using ProgressBar;
 
 public class Test3 : MonoBehaviour {
 
+    public GameObject MainCanvas;
     private ManagerMenu     menu;
     private ManagerEdition  editor;
 
 	// Use this for initialization
 	void Start () {
-        menu = GetComponent<ManagerMenu>();
+        menu = MainCanvas.GetComponent<ManagerMenu>();
         editor = GetComponent<ManagerEdition>();
     }
 
 	public void OnTest(){
-		menu.AnchoElementos = editor.GetPrefabWidth ();
-		menu.SetParametrosIniciales ();
 
         GameObject Tema1 = CrearTema("Tema 1", "Sebastian", new DateTime(2015, 9, 24),null);
         GameObject Tema2 = CrearTema("Tema 2", "Sebastian", new DateTime(2015, 9, 24), null);

@@ -7,8 +7,8 @@ public class ManagerDetail : MonoBehaviour {
 
     public      GameObject                      PrefBarra;
 	public  	GameObject						BotonSubir;
-	public		GameObject						PanelItems;
 	public		GameObject						MenuDetalle;
+    public      GameObject                      PanelInfo;
     public      GameObject                      PanelProgreso;
     public      GameObject                      Grafica1;
     public      GameObject                      Grafica2;
@@ -260,4 +260,10 @@ public class ManagerDetail : MonoBehaviour {
             }
         }	
 	}
+
+    public void MostarDetalle(bool mostrar)
+    {
+        PanelInfo.SetActive(mostrar);
+        PanelProgreso.SetActive(mostrar);
+    }
 }
