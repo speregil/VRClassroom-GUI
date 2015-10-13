@@ -40,15 +40,7 @@ public class ManagerMenu : MonoBehaviour {
 
 	void Start () {
 
-		// Inicializa los atributos con sus valores por defecto y de primer uso
-
-		PilaListas = new Stack<LinkedList<GameObject>> ();
-		ListaElementos = new LinkedList<GameObject> ();
-		ListaDetalle = new LinkedList<GameObject> ();
-		//PilaListas.Push (ListaElementos);
-		ElementoActual = null;
-		Desplazado = false;
-        EnAnimacion = false;
+		
 	}
 
 	//-----------------------------------------------------------------------------------
@@ -451,6 +443,7 @@ public class ManagerMenu : MonoBehaviour {
                 esTema.EnDetalle = false;
                 esTema.EsActual = false;
                 esTema.Seleccionado = false;
+                esTema.CalcularProgreso();
             }
             else
             {
@@ -601,6 +594,18 @@ public class ManagerMenu : MonoBehaviour {
 		SaltoElemento = AnchoElementos + DistanciaElementos;
 		EscalaInicial = new Vector3 (1.0f, 1.0f, 1.0f);
 	}
+
+    public void Inicializar()
+    {
+        // Inicializa los atributos con sus valores por defecto y de primer uso
+        PilaListas = new Stack<LinkedList<GameObject>>();
+        ListaElementos = new LinkedList<GameObject>();
+        ListaDetalle = new LinkedList<GameObject>();
+        //PilaListas.Push (ListaElementos);
+        ElementoActual = null;
+        Desplazado = false;
+        EnAnimacion = false;
+    }
 
     public IEnumerator Esperar(float tiempo)
     {

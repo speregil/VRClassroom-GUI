@@ -32,14 +32,15 @@ public class ManagerEdition : MonoBehaviour {
         mDetalle = Detalle.GetComponent<ManagerDetail>();
         Estado = CERRADO;
 
+        mPrincipal.Inicializar();
         mPrincipal.AnchoElementos = GetPrefabWidth();
         mPrincipal.SetParametrosIniciales();
     }
 
     void Start () {
-        
-        
-	}
+        Test4 test = GetComponent<Test4>();
+        test.OnTest();
+    }
 
 	public GameObject CrearTema(string nNombre, string nAutor, DateTime nFecha){
 		GameObject nuevoTema = GameObject.Instantiate (PrefTema);

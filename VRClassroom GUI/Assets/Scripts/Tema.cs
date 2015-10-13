@@ -19,6 +19,8 @@ public class Tema : MonoBehaviour{
 	public		Tema				TemaPadre;
     public      Sprite              sprNormal;
     public      Sprite              sprActual;
+    public      GameObject          ObjetoIcono;
+    public      Sprite              Icono;
 
 	private		GameObject			DetailCanvas;
 	private		GameObject			MainCanvas;
@@ -70,7 +72,14 @@ public class Tema : MonoBehaviour{
 		panel.MostrarInfoTema (this.gameObject);
 	}
 
-	public void AbrirContenido(){
+    public void SetIcono(Sprite nIcono)
+    {
+        Icono = nIcono;
+        Image img = ObjetoIcono.GetComponent<Image>();
+        img.sprite = Icono;
+    }
+
+    public void AbrirContenido(){
 		ManagerDetail detalle = DetailCanvas.GetComponent<ManagerDetail> ();
 		ManagerMenu menu = MainCanvas.GetComponent<ManagerMenu> ();
 		menu.AbrirContenido (Contenido);
@@ -95,7 +104,8 @@ public class Tema : MonoBehaviour{
 			}
 		}
 
-		PorcentajeCompleto = (totalCompleto * 100) / totalElementos;
+        if(totalElementos > 0)
+		    PorcentajeCompleto = (totalCompleto * 100) / totalElementos;
 
         ProgressBarBehaviour pbg = this.gameObject.GetComponentInChildren<ProgressBarBehaviour>();
         float valorActual = pbg.Value;
@@ -104,7 +114,8 @@ public class Tema : MonoBehaviour{
 
 		if (TemaPadre != null) {
 			Tema mt = TemaPadre.GetComponent<Tema>();
-			mt.CalcularProgreso();
+            if(EnDetalle)
+			    mt.CalcularProgreso();
 		}
 	}
 
@@ -116,6 +127,12 @@ public class Tema : MonoBehaviour{
             img.sprite = sprActual;
         else
             img.sprite = sprNormal;
+    }
+
+    public void ActualizarPanelProgreso()
+    {
+        ManagerDetail detalle = DetailCanvas.GetComponent<ManagerDetail>();
+        detalle.AbrirInfoProgreso(Nombre, Contenido);
     }
 
 	public void EnClick(){

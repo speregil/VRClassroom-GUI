@@ -6,12 +6,15 @@ public class Elemento : MonoBehaviour {
 
 	public	string		Nombre;
 	public	string		Descripcion;
+    public  string      NombreEjecutable;
 	public	bool		Completado;
 	public	bool		EnDetalle;
 	public 	bool		EsActual;
     public  Tema        TemaPadre;
     public  Sprite      sprNormal;
     public  Sprite      sprActual;
+    public  GameObject  ObjetoIcono;
+    public  Sprite      Icono;
 
     private	GameObject	DetailCanvas;
 	private	GameObject	MainCanvas;
@@ -19,6 +22,7 @@ public class Elemento : MonoBehaviour {
 	void Awake () {
 		Nombre = "SinNombre";
 		Descripcion = "SinDescripcion";
+        NombreEjecutable = "";
 		Completado = false;
 		EnDetalle = false;
 		DetailCanvas = GameObject.Find ("DetailCanvas");
@@ -30,6 +34,13 @@ public class Elemento : MonoBehaviour {
 		panel.MostrarInfoElemento (this.gameObject);
 	}
 
+    public void SetIcono(Sprite nIcono)
+    {
+        Icono = nIcono;
+        Image img = ObjetoIcono.GetComponent<Image>();
+        img.sprite = Icono;
+    }
+
 	public void Completar(){
 		Completado = true;
 		PanelInformacion panel = DetailCanvas.GetComponentInChildren<PanelInformacion> ();
@@ -37,7 +48,11 @@ public class Elemento : MonoBehaviour {
 
 		if (TemaPadre != null) {
 			Tema mt = TemaPadre.GetComponent<Tema>();
-			mt.CalcularProgreso();
+            if (mt != null)
+            {
+                mt.CalcularProgreso();
+                mt.ActualizarPanelProgreso();
+            }
 		}
 	}
 
@@ -49,6 +64,16 @@ public class Elemento : MonoBehaviour {
             img.sprite = sprActual;
         else
             img.sprite = sprNormal;
+    }
+
+    public void Ejecutar()
+    {
+        if (!NombreEjecutable.Equals(""))
+        {
+            GameObject main = GameObject.Find("MainMenu");
+            main.SetActive(false);
+            Application.LoadLevel(NombreEjecutable);
+        }
     }
 
     public void EnClick()
@@ -63,6 +88,7 @@ public class Elemento : MonoBehaviour {
                 {
                     MostrarInfo();
                     Completar();
+                    Ejecutar();
                 }
                 else
                 {
