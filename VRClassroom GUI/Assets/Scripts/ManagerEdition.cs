@@ -13,6 +13,7 @@ public class ManagerEdition : MonoBehaviour {
     public  GameObject      InputNombre;
     public  GameObject      Principal;
     public  GameObject      Detalle;
+    public  GameObject      Temporal;
     public  string          NombreUsuario;
     private string          Estado;
     private string          CreacionActual;
@@ -62,6 +63,7 @@ public class ManagerEdition : MonoBehaviour {
         }
 
         nuevoTema.GetComponent<Collider>().enabled = false;
+        nuevoTema.transform.SetParent(Temporal.transform);
 		return nuevoTema;
 	}
 
@@ -95,6 +97,7 @@ public class ManagerEdition : MonoBehaviour {
 		mText.text = nNombre;
 
         nuevoElemento.GetComponent<Collider>().enabled = false;
+        nuevoElemento.transform.SetParent(Temporal.transform);
         return nuevoElemento;
 	}
 
