@@ -8,10 +8,11 @@ using System.Collections;
  * */
 public class ManagerMenu : MonoBehaviour {
 
-	//---------------------------------------------------------------------------------
-	// Atributos
-	//---------------------------------------------------------------------------------
-	
+    //---------------------------------------------------------------------------------
+    // Atributos
+    //---------------------------------------------------------------------------------
+
+    public      string                          ElementoAbierto;
 	public		GameObject						ScrollPanel;			//Panel que contiene los elementos
 	public		GameObject						ItemView;				//Objeto padre del menu horizontal y vertical
 	public		GameObject						ItemPanel;
@@ -605,6 +606,7 @@ public class ManagerMenu : MonoBehaviour {
         ElementoActual = null;
         Desplazado = false;
         EnAnimacion = false;
+        ElementoAbierto = "Menu Principal";
     }
 
     public IEnumerator Esperar(float tiempo)

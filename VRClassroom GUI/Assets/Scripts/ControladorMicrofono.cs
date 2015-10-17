@@ -28,12 +28,6 @@ public class ControladorMicrofono : MonoBehaviour
     // Constructor
     //---------------------------------------------------------------------------------------
 
-    // No permite que el objeto se destruya al cambiar la escena
-    void Awake()
-    {
-        DontDestroyOnLoad(this.gameObject);
-    }
-
     // Use this for initialization
     void Start()
     {
@@ -69,12 +63,9 @@ public class ControladorMicrofono : MonoBehaviour
     public void Grabar()
     {
         isRecording = true;
-        if (Application.loadedLevel != nivelActual)
-        {
-            audList.Clear();
-            nivelActual = Application.loadedLevel;
-            numGrabacion = NumeroGrabacion();
-        }
+        audList.Clear();
+        nivelActual = Application.loadedLevel;
+        numGrabacion = NumeroGrabacion();
         StartCoroutine(Grabando());
     }
 
@@ -101,13 +92,13 @@ public class ControladorMicrofono : MonoBehaviour
             yield return new WaitForSeconds(10);
             audList.Add(audClip);
         }
-        SavWav.SaveList("Record/" + nombreUsuario + "_" + nombreCurso + "_" + nivelActual + "_" + numGrabacion, audList);
+        SavWav.SaveList("Data/myFile", audList);
     }
 
     //	Reproduce
     IEnumerator Reproduciendo()
     {
-        WWW www = new WWW("file://" + Application.dataPath + "/Record/" + nombreUsuario + "_" + nombreCurso + "_" + nivelActual + "_" + numGrabacion + ".wav");
+        WWW www = new WWW("file://" + Application.dataPath + "/Data/" + nombreUsuario + "_" + nombreCurso + "_" + nivelActual + "_" + numGrabacion + ".wav");
         yield return www;
         AudioClip audioClip = www.GetAudioClip(false, false);
         aud.clip = audioClip;
@@ -118,7 +109,7 @@ public class ControladorMicrofono : MonoBehaviour
     //Retorna el numero de grabacion actual para este modulo
     private int NumeroGrabacion()
     {
-        string[] archivos = Directory.GetFiles(Path.Combine(Application.dataPath, "Record"));
+        string[] archivos = Directory.GetFiles(Path.Combine(Application.dataPath, "Data"));
         int numTemp = -1;
         string prefijo = nombreUsuario + "_" + nombreCurso + "_" + nivelActual + "_";
         Debug.Log("pf: " + prefijo);

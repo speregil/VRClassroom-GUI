@@ -9,40 +9,47 @@ public class ManagerContexto : MonoBehaviour {
     public GameObject   BotonVolver;
     public GameObject   BotonNotas;
     public GameObject   BotonWeb;
+    public GameObject   PanelGrabacion;
+    public GameObject   BotonGrabar;
+    public GameObject   BotonDetener;
+    public GameObject   BotonCerrarGrabacion;
     public GameObject   MainMenu;
     public GameObject   MenuContexto;
     public Sprite       BotonNormal;
     public Sprite       BotonSeleccionado;
     public string       Estado;
 
-    private Button mBotonSalir;
-    private Button mBotonVolver;
-    private Button mBotonNotas;
-    private Button mBotonWeb;
     private LinkedListNode<GameObject> BotonActual;
-    private LinkedList<GameObject> Menu;
+    private LinkedListNode<GameObject> BotonAbierto;
+    private LinkedList<GameObject> MenuActual;
+    private LinkedList<GameObject> MenuPrincipal;
+    private LinkedList<GameObject> MenuGrabacion;
 
     public const string APAGADO = "APAGADO";
     public const string ENCENDIDO = "ENCENDIDO";
+    public const string GRABACION = "GRABACION";
 
     void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
-        Menu = new LinkedList<GameObject>();
+        MenuPrincipal = new LinkedList<GameObject>();
+        MenuGrabacion = new LinkedList<GameObject>();
 
-        mBotonSalir = BotonSalir.GetComponent<Button>();
-        Menu.AddLast(BotonSalir);
-        mBotonVolver = BotonVolver.GetComponent<Button>();
-        Menu.AddLast(BotonVolver);
-        mBotonNotas = BotonNotas.GetComponent<Button>();
-        Menu.AddLast(BotonNotas);
-        mBotonWeb = BotonWeb.GetComponent<Button>();
-        Menu.AddLast(BotonWeb);
+        MenuPrincipal.AddLast(BotonSalir);   
+        MenuPrincipal.AddLast(BotonVolver);     
+        MenuPrincipal.AddLast(BotonNotas);
+        MenuPrincipal.AddLast(BotonWeb);
 
-        BotonActual = Menu.First;
+        MenuGrabacion.AddLast(BotonGrabar);
+        MenuGrabacion.AddLast(BotonDetener);
+        MenuGrabacion.AddLast(BotonCerrarGrabacion);
+
+        MenuActual = MenuPrincipal;
+        BotonActual = MenuActual.First;
         Image img = BotonActual.Value.GetComponentInChildren<Image>();
         img.sprite = BotonSeleccionado;
 
+        PanelGrabacion.SetActive(false);
         MenuContexto.SetActive(false);
         Estado = APAGADO;
     }
@@ -66,15 +73,25 @@ public class ManagerContexto : MonoBehaviour {
                 case ENCENDIDO:
                     CambiarSeleccion();
                     break;
+                case GRABACION:
+                    CambiarSeleccion();
+                    break;
             }
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (Estado.Equals(ENCENDIDO))
+            Button mButton = BotonActual.Value.GetComponent<Button>();
+
+            switch (Estado)
             {
-                Button mButton = BotonActual.Value.GetComponent<Button>();
-                mButton.onClick.Invoke();
+                case ENCENDIDO:
+                    BotonAbierto = BotonActual;
+                    mButton.onClick.Invoke();
+                    break;
+                case GRABACION:
+                    mButton.onClick.Invoke();
+                    break;
             }
         }
     }
@@ -93,7 +110,7 @@ public class ManagerContexto : MonoBehaviour {
         }
         else
         {
-            BotonActual = Menu.First;
+            BotonActual = MenuActual.First;
             img = BotonActual.Value.GetComponentInChildren<Image>();
             img.sprite = BotonSeleccionado;
         }
@@ -112,13 +129,34 @@ public class ManagerContexto : MonoBehaviour {
         Estado = APAGADO;
         Application.LoadLevel("MainMenu");
     }
+
     public void Notas()
     {
-        Debug.Log("Modulo de notas todavia no existe");
+        Estado = GRABACION;
+        PanelGrabacion.SetActive(true);
+        MenuActual = MenuGrabacion;
+
+        foreach(GameObject boton in MenuActual)
+        {
+            Image temp = boton.GetComponentInChildren<Image>();
+            temp.sprite = BotonNormal;
+        }
+
+        BotonActual = MenuActual.First;
+        Image img = BotonActual.Value.GetComponentInChildren<Image>();
+        img.sprite = BotonSeleccionado;
     }
 
     public void Web()
     {
         Debug.Log("Modulo web todavia no existe");
-    } 
+    }
+    
+    public void CerrarVentana(GameObject ventana)
+    {
+        Estado = ENCENDIDO;
+        ventana.SetActive(false);
+        MenuActual = MenuPrincipal;
+        BotonActual = BotonAbierto;
+    }
 }
