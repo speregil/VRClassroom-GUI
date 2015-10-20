@@ -13,11 +13,13 @@ public class ManagerContexto : MonoBehaviour {
     public GameObject   BotonGrabar;
     public GameObject   BotonDetener;
     public GameObject   BotonCerrarGrabacion;
+    public GameObject   TextoNombre;
     public GameObject   MainMenu;
     public GameObject   MenuContexto;
     public Sprite       BotonNormal;
     public Sprite       BotonSeleccionado;
     public string       Estado;
+    public string       ElementoAbierto;
 
     private LinkedListNode<GameObject> BotonActual;
     private LinkedListNode<GameObject> BotonAbierto;
@@ -58,6 +60,10 @@ public class ManagerContexto : MonoBehaviour {
     {
         Canvas cv = GetComponent<Canvas>();
         cv.worldCamera = Camera.main;
+        ManagerMenu mm = MainMenu.GetComponentInChildren<ManagerMenu>();
+        ElementoAbierto = mm.ElementoAbierto;
+        if(level > 1)
+            MainMenu.SetActive(false);
     }
 
     void Update()
@@ -145,6 +151,13 @@ public class ManagerContexto : MonoBehaviour {
         BotonActual = MenuActual.First;
         Image img = BotonActual.Value.GetComponentInChildren<Image>();
         img.sprite = BotonSeleccionado;
+
+        ManagerMenu mm = MainMenu.GetComponentInChildren<ManagerMenu>();
+        Text nombreTitulo = TextoNombre.GetComponent<Text>();
+        if (mm != null)
+            nombreTitulo.text = mm.ElementoAbierto;
+        else
+            nombreTitulo.text = ElementoAbierto;
     }
 
     public void Web()

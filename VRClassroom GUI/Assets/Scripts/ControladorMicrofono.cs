@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System;
 
 //	Esta clase se encarga de controlar el comportamiento del microfono
 //	y ofrecer funcionalidades basicas sobre este.
@@ -17,12 +18,13 @@ public class ControladorMicrofono : MonoBehaviour
     //---------------------------------------------------------------------------------------
 
     public AudioSource aud;
+    public Text nombreArchivo;
+    public Text textoAviso;
     private List<AudioClip> audList;
     private bool isRecording;
     private int nivelActual;
     private string nombreUsuario;
     private string nombreCurso;
-    private int numGrabacion;
 
     //---------------------------------------------------------------------------------------
     // Constructor
@@ -36,7 +38,6 @@ public class ControladorMicrofono : MonoBehaviour
         nivelActual = 0;
         nombreUsuario = "";
         nombreCurso = "";
-        numGrabacion = 0;
     }
 
     //---------------------------------------------------------------------------------------
@@ -46,17 +47,7 @@ public class ControladorMicrofono : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyUp(KeyCode.G))
-        {
-            if (isRecording)
-            {
-                Detener();
-            }
-            else
-            {
-                Grabar();
-            }
-        }
+        
     }
 
     //	Inicia el proceso de grabacion
@@ -65,7 +56,7 @@ public class ControladorMicrofono : MonoBehaviour
         isRecording = true;
         audList.Clear();
         nivelActual = Application.loadedLevel;
-        numGrabacion = NumeroGrabacion();
+        textoAviso.text = "Grabando...";
         StartCoroutine(Grabando());
     }
 
@@ -73,6 +64,7 @@ public class ControladorMicrofono : MonoBehaviour
     public void Detener()
     {
         isRecording = false;
+        textoAviso.text = "Guardando...";
         Microphone.End(null);
     }
 
@@ -92,13 +84,16 @@ public class ControladorMicrofono : MonoBehaviour
             yield return new WaitForSeconds(10);
             audList.Add(audClip);
         }
-        SavWav.SaveList("Data/myFile", audList);
+        
+        DateTime fechaActual = DateTime.Now;
+        SavWav.SaveList("Resources/Data/" + nombreArchivo.text + " " + fechaActual.Year + "-" + fechaActual.Month + "-" + fechaActual.Day + " " + fechaActual.Hour + "" + fechaActual.Minute, audList);
+        textoAviso.text = "Listo";
     }
 
     //	Reproduce
     IEnumerator Reproduciendo()
     {
-        WWW www = new WWW("file://" + Application.dataPath + "/Data/" + nombreUsuario + "_" + nombreCurso + "_" + nivelActual + "_" + numGrabacion + ".wav");
+        WWW www = new WWW("file://");
         yield return www;
         AudioClip audioClip = www.GetAudioClip(false, false);
         aud.clip = audioClip;

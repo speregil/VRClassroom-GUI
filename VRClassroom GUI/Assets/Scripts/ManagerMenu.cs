@@ -416,6 +416,26 @@ public class ManagerMenu : MonoBehaviour {
 		Desplazado = false;
 		DesplazarMenu (1);
 
+        GameObject referencia = ListaElementos.First.Value;
+        Tema esTema = referencia.GetComponent<Tema>();
+        Elemento esElemento = referencia.GetComponent<Elemento>();
+        if(esTema != null)
+        {
+            Tema padre = esTema.TemaPadre;
+            if (padre != null)
+                ElementoAbierto = padre.Nombre;
+            else
+                ElementoAbierto = "Raiz";
+        }
+        else
+        {
+            Tema padre = esElemento.TemaPadre;
+            if (padre != null)
+                ElementoAbierto = padre.Nombre;
+            else
+                ElementoAbierto = "Raiz";
+        }
+
 		foreach (GameObject item in ListaElementos) {
 			Tema mt = item.GetComponent<Tema>();
 			if(mt != null)
@@ -460,7 +480,28 @@ public class ManagerMenu : MonoBehaviour {
     {
         LimpiarMenuHorizontal();
         LinkedList<GameObject> temp = PilaListas.Pop();
-        foreach(GameObject item in temp)
+
+        GameObject referencia = temp.First.Value;
+        Tema mt = referencia.GetComponent<Tema>();
+        Elemento me = referencia.GetComponent<Elemento>();
+        if(mt != null)
+        {
+            Tema padre = mt.TemaPadre;
+            if (padre != null)
+                ElementoAbierto = padre.Nombre;
+            else
+                ElementoAbierto = "Raiz";
+        }
+        else
+        {
+            Tema padre = me.TemaPadre;
+            if (padre != null)
+                ElementoAbierto = padre.Nombre;
+            else
+                ElementoAbierto = "Raiz";
+        }
+
+        foreach (GameObject item in temp)
         {
             item.SetActive(true);
             Tema esTema = item.GetComponent<Tema>();
@@ -556,6 +597,11 @@ public class ManagerMenu : MonoBehaviour {
 		}
 	}
 
+    public void ActualizarElementoAbierto(string nombreElemento)
+    {
+
+    }
+
 	public void DesplazarMenu(int posicion){
 		if (!Desplazado) {
 			Vector3 nuevaPos = ScrollPanel.transform.position;
@@ -606,7 +652,7 @@ public class ManagerMenu : MonoBehaviour {
         ElementoActual = null;
         Desplazado = false;
         EnAnimacion = false;
-        ElementoAbierto = "Menu Principal";
+        ElementoAbierto = "Raiz";
     }
 
     public IEnumerator Esperar(float tiempo)

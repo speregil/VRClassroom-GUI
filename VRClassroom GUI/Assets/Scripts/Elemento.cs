@@ -46,7 +46,11 @@ public class Elemento : MonoBehaviour {
 		PanelInformacion panel = DetailCanvas.GetComponentInChildren<PanelInformacion> ();
 		panel.MarcarCompletado ();
 
-		if (TemaPadre != null) {
+        GameObject main = GameObject.Find("MainCanvas");
+        ManagerMenu mm = main.GetComponent<ManagerMenu>();
+        mm.ElementoAbierto = Nombre;
+
+        if (TemaPadre != null) {
 			Tema mt = TemaPadre.GetComponent<Tema>();
             if (mt != null)
             {
@@ -71,7 +75,7 @@ public class Elemento : MonoBehaviour {
         if (!NombreEjecutable.Equals(""))
         {
             GameObject main = GameObject.Find("MainMenu");
-            main.SetActive(false);
+            //main.SetActive(false);
             Application.LoadLevel(NombreEjecutable);
         }
     }
