@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 public class ManagerContexto : MonoBehaviour {
 
+   
     public GameObject   BotonSalir;
     public GameObject   BotonVolver;
     public GameObject   BotonNotas;
@@ -27,6 +28,7 @@ public class ManagerContexto : MonoBehaviour {
     private LinkedList<GameObject> MenuPrincipal;
     private LinkedList<GameObject> MenuGrabacion;
 
+    public static bool ACTIVO = true;
     public const string APAGADO = "APAGADO";
     public const string ENCENDIDO = "ENCENDIDO";
     public const string GRABACION = "GRABACION";
@@ -68,36 +70,39 @@ public class ManagerContexto : MonoBehaviour {
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.LeftAlt))
+        if (ACTIVO)
         {
-            switch (Estado)
+            if (Input.GetKeyDown(KeyCode.LeftAlt))
             {
-                case APAGADO:
-                    MenuContexto.SetActive(true);
-                    Estado = ENCENDIDO;
-                    break;
-                case ENCENDIDO:
-                    CambiarSeleccion();
-                    break;
-                case GRABACION:
-                    CambiarSeleccion();
-                    break;
+                switch (Estado)
+                {
+                    case APAGADO:
+                        MenuContexto.SetActive(true);
+                        Estado = ENCENDIDO;
+                        break;
+                    case ENCENDIDO:
+                        CambiarSeleccion();
+                        break;
+                    case GRABACION:
+                        CambiarSeleccion();
+                        break;
+                }
             }
-        }
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Button mButton = BotonActual.Value.GetComponent<Button>();
-
-            switch (Estado)
+            if (Input.GetKeyDown(KeyCode.Space))
             {
-                case ENCENDIDO:
-                    BotonAbierto = BotonActual;
-                    mButton.onClick.Invoke();
-                    break;
-                case GRABACION:
-                    mButton.onClick.Invoke();
-                    break;
+                Button mButton = BotonActual.Value.GetComponent<Button>();
+
+                switch (Estado)
+                {
+                    case ENCENDIDO:
+                        BotonAbierto = BotonActual;
+                        mButton.onClick.Invoke();
+                        break;
+                    case GRABACION:
+                        mButton.onClick.Invoke();
+                        break;
+                }
             }
         }
     }

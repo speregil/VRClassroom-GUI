@@ -84,9 +84,13 @@ public class ControladorMicrofono : MonoBehaviour
             yield return new WaitForSeconds(10);
             audList.Add(audClip);
         }
-        
+
+        GameObject main = GameObject.Find("MainCanvas");
+        ManagerMenu mm = main.GetComponent<ManagerMenu>();
         DateTime fechaActual = DateTime.Now;
-        SavWav.SaveList("Resources/Data/" + nombreArchivo.text + " " + fechaActual.Year + "-" + fechaActual.Month + "-" + fechaActual.Day + " " + fechaActual.Hour + "" + fechaActual.Minute, audList);
+        string nombreCompleto = nombreArchivo.text + "-" + fechaActual.Year + "-" + fechaActual.Month + "-" + fechaActual.Day + " " + fechaActual.Hour + "" + fechaActual.Minute;
+        mm.GuardarNota(nombreCompleto);
+        SavWav.SaveList("Resources/Data/" + nombreCompleto, audList);
         textoAviso.text = "Listo";
     }
 

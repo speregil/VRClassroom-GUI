@@ -30,6 +30,7 @@ public class ManagerMenu : MonoBehaviour {
 	private 	LinkedList<GameObject>			ListaDetalle;
 	private 	LinkedListNode<GameObject>		ElementoActual;			//Elemento que el usuario ve actualmente
 	private		LinkedListNode<GameObject>		DetalleActual;
+    private     List<string>                    RepositorioNotas;
 	private		Vector3							EscalaInicial;    		//Determina la escala en que se dibujara un nuevo elemento que se agregue
 	private		Vector3							PosInicial;  			//Determina la posicion donde se dibujara un nuevo elemento que se agregue
 	private		Vector3							PosDetalle;
@@ -635,6 +636,23 @@ public class ManagerMenu : MonoBehaviour {
         return null;
     }
 
+    public void GuardarNota(string nota)
+    {
+        RepositorioNotas.Add(nota);
+    }
+
+    public List<string> RecuperarNotas()
+    {
+        List<string> datosRecuperados = new List<string>();
+        foreach(string dato in RepositorioNotas)
+        {
+            string[] datoFormateado = dato.Split('-');
+            if (datoFormateado[0].Equals(ElementoAbierto))
+                datosRecuperados.Add(dato); 
+        }
+        return datosRecuperados;
+    }
+
 	public void SetParametrosIniciales(){
 		PosInicial = Vector3.zero;
 		PosDetalle = Vector3.zero;
@@ -648,6 +666,7 @@ public class ManagerMenu : MonoBehaviour {
         PilaListas = new Stack<LinkedList<GameObject>>();
         ListaElementos = new LinkedList<GameObject>();
         ListaDetalle = new LinkedList<GameObject>();
+        RepositorioNotas = new List<string>();
         //PilaListas.Push (ListaElementos);
         ElementoActual = null;
         Desplazado = false;
