@@ -19,7 +19,6 @@ public class ManagerContexto : MonoBehaviour {
     public GameObject   MenuContexto;
     public Sprite       BotonNormal;
     public Sprite       BotonSeleccionado;
-    public string       Estado;
     public string       ElementoAbierto;
 
     private LinkedListNode<GameObject> BotonActual;
@@ -27,17 +26,21 @@ public class ManagerContexto : MonoBehaviour {
     private LinkedList<GameObject> MenuActual;
     private LinkedList<GameObject> MenuPrincipal;
     private LinkedList<GameObject> MenuGrabacion;
+    private List<string> GrabacionesPendientes;
 
-    public static bool ACTIVO = true;
+    public static string Estado;
+    public static bool ACTIVO = false;
     public const string APAGADO = "APAGADO";
     public const string ENCENDIDO = "ENCENDIDO";
     public const string GRABACION = "GRABACION";
+    public const string BLOQUEADO = "BLOQUEADO";
 
     void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
         MenuPrincipal = new LinkedList<GameObject>();
         MenuGrabacion = new LinkedList<GameObject>();
+        GrabacionesPendientes = new List<string>();
 
         MenuPrincipal.AddLast(BotonSalir);   
         MenuPrincipal.AddLast(BotonVolver);     
@@ -70,25 +73,26 @@ public class ManagerContexto : MonoBehaviour {
 
     void Update()
     {
-        if (ACTIVO)
-        {
-            if (Input.GetKeyDown(KeyCode.LeftAlt))
-            {
-                switch (Estado)
-                {
-                    case APAGADO:
-                        MenuContexto.SetActive(true);
-                        Estado = ENCENDIDO;
-                        break;
-                    case ENCENDIDO:
-                        CambiarSeleccion();
-                        break;
-                    case GRABACION:
-                        CambiarSeleccion();
-                        break;
-                }
-            }
 
+        if (Input.GetKeyDown(KeyCode.LeftAlt))
+        {
+            switch (Estado)
+            {
+                case APAGADO:
+                    MenuContexto.SetActive(true);
+                    ACTIVO = true;
+                    Estado = ENCENDIDO;
+                    break;
+                case ENCENDIDO:
+                    CambiarSeleccion();
+                    break;
+                case GRABACION:
+                    CambiarSeleccion();
+                    break;
+            }
+        }
+
+        if (ACTIVO) { 
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 Button mButton = BotonActual.Value.GetComponent<Button>();
@@ -131,13 +135,22 @@ public class ManagerContexto : MonoBehaviour {
     {
         MenuContexto.SetActive(false);
         Estado = APAGADO;
+        ACTIVO = false;
     }
 
     public void Volver()
     {
         MainMenu.SetActive(true);
-        MenuContexto.SetActive(false);
+        ManagerMenu mm = MainMenu.GetComponentInChildren<ManagerMenu>();
+        
+        foreach(string nota in GrabacionesPendientes)
+        {
+            mm.GuardarNota(nota);
+        }
+        
         Estado = APAGADO;
+        ACTIVO = false;
+        MenuContexto.SetActive(false);
         Application.LoadLevel("MainMenu");
     }
 
@@ -163,6 +176,11 @@ public class ManagerContexto : MonoBehaviour {
             nombreTitulo.text = mm.ElementoAbierto;
         else
             nombreTitulo.text = ElementoAbierto;
+    }
+
+    public void archivarGrabacion(string nota)
+    {
+        GrabacionesPendientes.Add(nota);
     }
 
     public void Web()

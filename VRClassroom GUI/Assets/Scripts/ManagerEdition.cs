@@ -103,10 +103,13 @@ public class ManagerEdition : MonoBehaviour {
 
     public void AbrirMenuCrear()
     {
-        MenuCrear.SetActive(true);
-        mPrincipal.MostarMenu(false);
-        mDetalle.MostarDetalle(false);
-        Estado = ABIERTO;
+        if (!(ManagerReproduccion.ACTIVO || ManagerContexto.ACTIVO))
+        {
+            MenuCrear.SetActive(true);
+            mPrincipal.MostarMenu(false);
+            mDetalle.MostarDetalle(false);
+            Estado = ABIERTO;
+        }
     }
 
     public void AbrirInputCrear(int objetivo)

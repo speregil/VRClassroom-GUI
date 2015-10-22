@@ -69,9 +69,9 @@ public class ControladorMicrofono : MonoBehaviour
     }
 
     //	Reproduce la informacion grabada
-    public void Reproducir()
+    public void Reproducir(Text Label)
     {
-        StartCoroutine(Reproduciendo());
+        StartCoroutine(Reproduciendo(Label.text));
     }
 
     //	Graba
@@ -86,18 +86,29 @@ public class ControladorMicrofono : MonoBehaviour
         }
 
         GameObject main = GameObject.Find("MainCanvas");
-        ManagerMenu mm = main.GetComponent<ManagerMenu>();
+        
         DateTime fechaActual = DateTime.Now;
         string nombreCompleto = nombreArchivo.text + "-" + fechaActual.Year + "-" + fechaActual.Month + "-" + fechaActual.Day + " " + fechaActual.Hour + "" + fechaActual.Minute;
-        mm.GuardarNota(nombreCompleto);
-        SavWav.SaveList("Resources/Data/" + nombreCompleto, audList);
+
+        if (main != null)
+        {
+            ManagerMenu mm = main.GetComponent<ManagerMenu>();
+            mm.GuardarNota(nombreCompleto);
+        }
+        else
+        {
+            ManagerContexto mc = GetComponent<ManagerContexto>();
+            mc.archivarGrabacion(nombreCompleto);
+        }
+
+        SavWav.SaveList("Resources/" + nombreCompleto, audList);
         textoAviso.text = "Listo";
     }
 
     //	Reproduce
-    IEnumerator Reproduciendo()
+    IEnumerator Reproduciendo(string archivo)
     {
-        WWW www = new WWW("file://");
+        WWW www = new WWW("file://" + Application.dataPath + "/Resources/" + archivo + ".wav");
         yield return www;
         AudioClip audioClip = www.GetAudioClip(false, false);
         aud.clip = audioClip;

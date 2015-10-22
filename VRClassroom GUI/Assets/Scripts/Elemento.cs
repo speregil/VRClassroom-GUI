@@ -84,7 +84,7 @@ public class Elemento : MonoBehaviour {
     {
         ManagerMenu menu = MainCanvas.GetComponent<ManagerMenu>();
 
-        if (!menu.EnAnimacion)
+        if (!menu.EnAnimacion && !(ManagerReproduccion.ACTIVO || ManagerContexto.ACTIVO))
         {
             if (EnDetalle)
             {

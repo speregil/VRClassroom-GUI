@@ -140,7 +140,7 @@ public class Tema : MonoBehaviour{
 		ManagerMenu menu = MainCanvas.GetComponent<ManagerMenu> ();
 		ManagerDetail detale = DetailCanvas.GetComponent<ManagerDetail> ();
 
-        if (!menu.EnAnimacion)
+        if (!menu.EnAnimacion && !(ManagerReproduccion.ACTIVO || ManagerContexto.ACTIVO))
         {
             if (EnDetalle)
             {

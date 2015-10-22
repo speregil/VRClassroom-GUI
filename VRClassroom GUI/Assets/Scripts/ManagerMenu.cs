@@ -598,11 +598,6 @@ public class ManagerMenu : MonoBehaviour {
 		}
 	}
 
-    public void ActualizarElementoAbierto(string nombreElemento)
-    {
-
-    }
-
 	public void DesplazarMenu(int posicion){
 		if (!Desplazado) {
 			Vector3 nuevaPos = ScrollPanel.transform.position;
@@ -672,6 +667,13 @@ public class ManagerMenu : MonoBehaviour {
         Desplazado = false;
         EnAnimacion = false;
         ElementoAbierto = "Raiz";
+
+        RepositorioNotas.Add("Raiz-1");
+        RepositorioNotas.Add("Raiz-2");
+        RepositorioNotas.Add("Raiz-3");
+        RepositorioNotas.Add("Raiz-4");
+        RepositorioNotas.Add("Raiz-5");
+        RepositorioNotas.Add("Raiz-6");
     }
 
     public IEnumerator Esperar(float tiempo)
