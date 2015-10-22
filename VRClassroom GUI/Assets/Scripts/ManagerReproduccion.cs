@@ -86,6 +86,42 @@ public class ManagerReproduccion : MonoBehaviour {
         TextoElemento.GetComponent<Text>().text = mm.ElementoAbierto;
         List <string> listaDatos = mm.RecuperarNotas();
         CargarLista(listaDatos);
+        DibujarDatos();
+
+        if (DatosPendientes.Count > 0)
+            BotonAdelante.SetActive(true);
+    }
+
+    public void Cerrar()
+    {
+        Activo = false;
+        ManagerContexto.ACTIVO = true;
+        PanelReproducciones.SetActive(false);
+    }
+
+    public void CargarLista(List<string> listaDatos)
+    {
+        int i = 0;
+        foreach (string item in listaDatos)
+        {
+            if (i < DatosActuales.Length)
+            {
+                DatosActuales[i] = item;
+                i += 1;
+            }
+            else
+            {
+                DatosPendientes.Add(item);
+            }
+        }
+    }
+
+    public void DibujarDatos()
+    {
+        Elemento1.SetActive(false);
+        Elemento2.SetActive(false);
+        Elemento3.SetActive(false);
+        Elemento4.SetActive(false);
 
         Text txt;
         if (DatosActuales[0] != null)
@@ -113,30 +149,6 @@ public class ManagerReproduccion : MonoBehaviour {
                         txt.text = DatosActuales[3];
                     }
                 }
-            }
-        }
-    }
-
-    public void Cerrar()
-    {
-        Activo = false;
-        ManagerContexto.ACTIVO = true;
-        PanelReproducciones.SetActive(false);
-    }
-
-    public void CargarLista(List<string> listaDatos)
-    {
-        int i = 0;
-        foreach (string item in listaDatos)
-        {
-            if (i < DatosActuales.Length)
-            {
-                DatosActuales[i] = item;
-                i += 1;
-            }
-            else
-            {
-                DatosPendientes.Add(item);
             }
         }
     }
@@ -180,5 +192,46 @@ public class ManagerReproduccion : MonoBehaviour {
             img = BotonActual.Value.GetComponent<Image>();
             img.sprite = LabelSeleccionado;
         }
+    }
+
+    public void Avanzar()
+    {
+        List<string> listaActual = DatosPendientes;
+        DatosPendientes = new List<string>();
+
+        foreach (string item in DatosActuales)
+        {
+            DatosGuardados.Push(item);
+        }
+
+        BotonAtras.SetActive(true);
+        CargarLista(listaActual);
+
+        if (DatosPendientes.Count > 0)
+            BotonAdelante.SetActive(true);
+        else
+            BotonAdelante.SetActive(false);
+    }
+
+    public void Retroceder()
+    {
+        List<string> datosRecuperados = new List<string>();
+        int i = 3;
+        while (i > -1)
+        {
+            string actual = DatosActuales[i];
+            if (actual != null)
+                DatosPendientes.Insert(0, actual);
+            datosRecuperados.Insert(0, DatosGuardados.Pop());
+            i -= 1;
+        }
+
+
+        CargarLista(datosRecuperados);
+
+        if (DatosGuardados.Count > 0)
+            BotonAtras.SetActive(true);
+        else
+            BotonAtras.SetActive(false);
     }
 }
