@@ -29,91 +29,27 @@ public class ManagerReproduccion : MonoBehaviour {
     public static bool ACTIVO = false;
     // Use this for initialization
     void Start () {
-        ElementosMenu = new LinkedList<GameObject>();
-        ElementosMenu.AddLast(Elemento1);
-        ElementosMenu.AddLast(Elemento2);
-        ElementosMenu.AddLast(Elemento3);
-        ElementosMenu.AddLast(Elemento4);
-        ElementosMenu.AddLast(BotonAtras);
-        ElementosMenu.AddLast(BotonAdelante);
-        ElementosMenu.AddLast(BotonSalir);
-
-        Image img;
-        if (ElementosMenu.First.Value.activeSelf)
-        {
-            BotonActual = ElementosMenu.First;
-            img = BotonActual.Value.GetComponent<Image>();
-            img.sprite = LabelSeleccionado;
-        }
-        else
-        {
-            BotonActual = ElementosMenu.Last;
-            img = BotonActual.Value.GetComponentInChildren<Image>();
-            img.sprite = BotonSeleccionado;
-        }
-
         DatosGuardados = new Stack<string>();
         DatosPendientes = new List<string>();
         DatosActuales = new string[4];
-
-        PanelReproducciones.SetActive(false);
     }
 	
 	// Update is called once per frame
 	void Update () {
-        if (ACTIVO)
-        {
-            if (Input.GetKeyDown(KeyCode.LeftAlt))
-            {
-                CambiarSeleccion();
-            }
-
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                Button esBoton = BotonActual.Value.GetComponent<Button>();
-                Button esLabel = BotonActual.Value.GetComponentInChildren<Button>();
-                if (esBoton != null)
-                {
-                    esBoton.onClick.Invoke();
-                }
-                else
-                {
-                    esLabel.onClick.Invoke();
-                }
-            }
-        }
+        
     }
 
     public void Abrir()
     {
-        if (!(ACTIVO || ManagerContexto.ACTIVO))
-        {
-            ManagerContexto.Estado = ManagerContexto.BLOQUEADO;
-            PanelReproducciones.SetActive(true);
-            ACTIVO = true;
+        LimpiarPanel();
+        GameObject main = GameObject.Find("MainCanvas");
+        ManagerMenu mm = main.GetComponent<ManagerMenu>();
+        List<string> listaDatos = mm.RecuperarNotas();
+        CargarLista(listaDatos);
+        DibujarDatos();
 
-            GameObject main = GameObject.Find("MainCanvas");
-            ManagerMenu mm = main.GetComponent<ManagerMenu>();
-            TextoElemento.GetComponent<Text>().text = mm.ElementoAbierto;
-            List<string> listaDatos = mm.RecuperarNotas();
-            CargarLista(listaDatos);
-            DibujarDatos();
-
-            if (DatosPendientes.Count > 0)
-                BotonAdelante.SetActive(true);
-        }
-    }
-
-    public void Cerrar()
-    {
-        ACTIVO = false;
-        DatosGuardados = new Stack<string>();
-        DatosPendientes = new List<string>();
-        DatosActuales = new string[4];
-        BotonAdelante.SetActive(false);
-        BotonAtras.SetActive(false);
-        ManagerContexto.Estado = ManagerContexto.APAGADO;
-        PanelReproducciones.SetActive(false);
+        if (DatosPendientes.Count > 0)
+            BotonAdelante.SetActive(true);
     }
 
     public void CargarLista(List<string> listaDatos)
@@ -171,68 +107,6 @@ public class ManagerReproduccion : MonoBehaviour {
         }
     }
 
-    public void CambiarSeleccion()
-    {
-        Button esBoton = BotonActual.Value.GetComponent<Button>();
-        Button esLabel = BotonActual.Value.GetComponentInChildren<Button>();
-        Image img;
-        if (esBoton != null)
-        {
-            img = BotonActual.Value.GetComponentInChildren<Image>();
-            img.sprite = BotonNormal;
-        }
-        else
-        {
-            img = BotonActual.Value.GetComponent<Image>();
-            img.sprite = LabelNormal;
-        }
-
-        bool encontroActivo = false;
-
-        while (!encontroActivo)
-        {
-            LinkedListNode<GameObject> temp = BotonActual.Next;
-            if (temp != null)
-            {
-                BotonActual = temp;
-                if (BotonActual.Value.activeSelf)
-                {
-                    encontroActivo = true;
-                    esBoton = BotonActual.Value.GetComponent<Button>();
-                    esLabel = BotonActual.Value.GetComponentInChildren<Button>();
-                    if (esBoton != null)
-                    {
-                        img = BotonActual.Value.GetComponentInChildren<Image>();
-                        img.sprite = BotonSeleccionado;
-                    }
-                    else
-                    {
-                        img = BotonActual.Value.GetComponent<Image>();
-                        img.sprite = LabelSeleccionado;
-                    }
-                }
-            }
-            else
-            {
-                BotonActual = ElementosMenu.First;
-
-                if (BotonActual.Value.activeSelf)
-                {
-                    encontroActivo = true;
-                    img = BotonActual.Value.GetComponent<Image>();
-                    img.sprite = LabelSeleccionado;
-                }
-                else
-                {
-                    BotonActual = ElementosMenu.Last;
-                    img = BotonActual.Value.GetComponentInChildren<Image>();
-                    img.sprite = BotonSeleccionado;
-                    encontroActivo = true;
-                }
-            }
-        }
-    }
-
     public void Avanzar()
     {
         List<string> listaActual = DatosPendientes;
@@ -250,11 +124,7 @@ public class ManagerReproduccion : MonoBehaviour {
         if (DatosPendientes.Count > 0)
             BotonAdelante.SetActive(true);
         else
-        {
             BotonAdelante.SetActive(false);
-            BotonAtras.GetComponentInChildren<Image>().sprite = BotonSeleccionado;
-            BotonActual = BotonActual.Previous;
-        }
     }
 
     public void Retroceder()
@@ -277,10 +147,15 @@ public class ManagerReproduccion : MonoBehaviour {
         if (DatosGuardados.Count > 0)
             BotonAtras.SetActive(true);
         else
-        {
             BotonAtras.SetActive(false);
-            BotonAdelante.GetComponentInChildren<Image>().sprite = BotonSeleccionado;
-            BotonActual = BotonActual.Next;
-        }
+    }
+
+    public void LimpiarPanel()
+    {
+        DatosGuardados = new Stack<string>();
+        DatosPendientes = new List<string>();
+        DatosActuales = new string[4];
+        BotonAdelante.SetActive(false);
+        BotonAtras.SetActive(false);
     }
 }

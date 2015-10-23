@@ -72,10 +72,9 @@ public class Elemento : MonoBehaviour {
 
     public void Ejecutar()
     {
+        Completar();
         if (!NombreEjecutable.Equals(""))
         {
-            GameObject main = GameObject.Find("MainMenu");
-            //main.SetActive(false);
             Application.LoadLevel(NombreEjecutable);
         }
     }
@@ -83,21 +82,24 @@ public class Elemento : MonoBehaviour {
     public void EnClick()
     {
         ManagerMenu menu = MainCanvas.GetComponent<ManagerMenu>();
+        ManagerReproduccion rep = DetailCanvas.GetComponent<ManagerReproduccion>();
 
-        if (!menu.EnAnimacion && !(ManagerReproduccion.ACTIVO || ManagerContexto.ACTIVO))
+        if (!menu.EnAnimacion && !ManagerContexto.ACTIVO)
         {
             if (EnDetalle)
             {
                 if (EsActual)
                 {
                     MostrarInfo();
-                    Completar();
-                    Ejecutar();
+                    menu.ElementoAbierto = Nombre;
+                    rep.Abrir();
                 }
                 else
                 {
                     menu.DetectarPosicion(this.gameObject, 1);
                     MostrarInfo();
+                    menu.ElementoAbierto = Nombre;
+                    rep.Abrir();
                 }
             }
             else
@@ -105,13 +107,16 @@ public class Elemento : MonoBehaviour {
                 if (EsActual)
                 {
                     MostrarInfo();
-                    Completar();
+                    menu.ElementoAbierto = Nombre;
+                    rep.Abrir();
                 }
                 else
                 {
                     menu.DetectarPosicion(this.gameObject, 0);
                     menu.LimpiarMenuVertical();
                     MostrarInfo();
+                    menu.ElementoAbierto = Nombre;
+                    rep.Abrir();
                 }
             }
         }

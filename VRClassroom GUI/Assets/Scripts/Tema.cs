@@ -82,9 +82,12 @@ public class Tema : MonoBehaviour{
     public void AbrirContenido(){
 		ManagerDetail detalle = DetailCanvas.GetComponent<ManagerDetail> ();
 		ManagerMenu menu = MainCanvas.GetComponent<ManagerMenu> ();
-		menu.AbrirContenido (Contenido);
+        ManagerReproduccion rep = DetailCanvas.GetComponent<ManagerReproduccion>();
+
+        menu.AbrirContenido (Contenido);
         menu.ElementoAbierto = Nombre;
         detalle.AbrirInfoProgreso(Nombre, Contenido);
+        rep.Abrir();
 		MostrarInfo ();
 	}
 
@@ -139,8 +142,9 @@ public class Tema : MonoBehaviour{
 	public void EnClick(){
 		ManagerMenu menu = MainCanvas.GetComponent<ManagerMenu> ();
 		ManagerDetail detale = DetailCanvas.GetComponent<ManagerDetail> ();
+        ManagerReproduccion rep = DetailCanvas.GetComponent<ManagerReproduccion>();
 
-        if (!menu.EnAnimacion && !(ManagerReproduccion.ACTIVO || ManagerContexto.ACTIVO))
+        if (!menu.EnAnimacion && !ManagerContexto.ACTIVO)
         {
             if (EnDetalle)
             {
@@ -165,6 +169,7 @@ public class Tema : MonoBehaviour{
                         MostrarInfo();
                         detale.LimpiarDetalle();
                         detale.AbrirInfoProgreso(Nombre, Contenido);
+                        rep.Abrir();
                     }
                     else
                     {

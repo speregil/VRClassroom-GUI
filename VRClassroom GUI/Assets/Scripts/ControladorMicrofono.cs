@@ -20,6 +20,7 @@ public class ControladorMicrofono : MonoBehaviour
     public AudioSource aud;
     public Text nombreArchivo;
     public Text textoAviso;
+    public Text textoAvisoPanelReproduccion;
     private List<AudioClip> audList;
     private bool isRecording;
     private int nivelActual;
@@ -71,6 +72,7 @@ public class ControladorMicrofono : MonoBehaviour
     //	Reproduce la informacion grabada
     public void Reproducir(Text Label)
     {
+        textoAvisoPanelReproduccion.text = "Reproduciendo";
         StartCoroutine(Reproduciendo(Label.text));
     }
 
@@ -114,6 +116,7 @@ public class ControladorMicrofono : MonoBehaviour
         aud.clip = audioClip;
         aud.Play();
         yield return new WaitForSeconds(aud.clip.length);
+        textoAvisoPanelReproduccion.text = "Detenido";
     }
 
     //Retorna el numero de grabacion actual para este modulo

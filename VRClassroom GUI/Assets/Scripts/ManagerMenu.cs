@@ -648,6 +648,16 @@ public class ManagerMenu : MonoBehaviour {
         return datosRecuperados;
     }
 
+    public void EjecutarActual()
+    {
+        Elemento elemActual = DetalleActual.Value.GetComponent<Elemento>();
+        if(elemActual != null)
+        {
+            Debug.Log("Si es elemento");
+            elemActual.Ejecutar();
+        }
+    }
+
 	public void SetParametrosIniciales(){
 		PosInicial = Vector3.zero;
 		PosDetalle = Vector3.zero;
@@ -668,12 +678,12 @@ public class ManagerMenu : MonoBehaviour {
         EnAnimacion = false;
         ElementoAbierto = "Raiz";
 
-        RepositorioNotas.Add("Raiz-1");
-        RepositorioNotas.Add("Raiz-2");
-        RepositorioNotas.Add("Raiz-3");
-        RepositorioNotas.Add("Raiz-4");
-        RepositorioNotas.Add("Raiz-5");
-        RepositorioNotas.Add("Raiz-6");
+        RepositorioNotas.Add("Tema Prueba-1");
+        RepositorioNotas.Add("Tema Prueba-2");
+        RepositorioNotas.Add("Tema Prueba-3");
+        RepositorioNotas.Add("Tema Prueba-4");
+        RepositorioNotas.Add("Tema Prueba-5");
+        RepositorioNotas.Add("Tema Prueba-6");
     }
 
     public IEnumerator Esperar(float tiempo)
