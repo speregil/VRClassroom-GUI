@@ -37,9 +37,9 @@ public class PanelInformacion : MonoBehaviour {
 		label.text = "No. de elementos: " + tm.NumElementos;
 
 		label = PorcentajeTema.GetComponent<Text> ();
-		label.text = (tm.PorcentajeCompleto) + "% Completado";
+		label.text = (tm.PorcentajeCompleto*100) + "% Completado";
 
-        AjustarBarra(tm.PorcentajeCompleto);
+        AjustarBarra(tm.PorcentajeCompleto*100);
 	}
 
 	public void MostrarInfoElemento(GameObject temaSeleccionado){

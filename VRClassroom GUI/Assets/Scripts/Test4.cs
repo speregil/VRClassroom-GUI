@@ -24,23 +24,26 @@ public class Test4 : MonoBehaviour
         GameObject TemaPrueba = CrearTema("Tema Prueba", "Sebastian", new DateTime(2015, 10, 13), null);
         GameObject VRClassroom = CrearTema("VRClassroom", "Andrés Gomez", new DateTime(2015, 06, 13), null);
 
-        GameObject Elemento2a = CrearElemento("Elemento 2a", "Descripcion 2a", TemaPrueba);
-        GameObject Elemento2b = CrearElemento("Elemento 2b", "Descripcion 2b", TemaPrueba);
-        GameObject Elemento2c = CrearElemento("Elemento 2c", "Descripcion 2c", TemaPrueba);
-        GameObject Elemento2d = CrearElemento("Elemento 2d", "Descripcion 2d", TemaPrueba);
-        GameObject Elemento2e = CrearElemento("Elemento 2e", "Descripcion 2e", TemaPrueba);
-        GameObject Elemento2f = CrearElemento("Elemento 2f", "Descripcion 2f", TemaPrueba);
-        GameObject Elemento2g = CrearElemento("Elemento 2g", "Descripcion 2g", TemaPrueba);
-        GameObject Elemento2h = CrearElemento("Elemento 2h", "Descripcion 2h", TemaPrueba);
-        GameObject Elemento2i = CrearElemento("Elemento 2i", "Descripcion 2i", TemaPrueba);
+        menu.Agregar(TemaPrueba);
+        menu.Agregar(VRClassroom);
 
-        GameObject SolarSystem = CrearElemento("Solar System", "Un modelo del sistema solar que muestra el funcionamiento basico de Unity", VRClassroom);
+        GameObject SubTema1 = CrearTema("SubTema 1", "Sebastian", new DateTime(2015, 10, 23), TemaPrueba);
+        GameObject SubTema2 = CrearTema("SubTema 2", "Sebastian", new DateTime(2015, 10, 23), TemaPrueba);
+        GameObject Elemento2a = CrearElemento("Elemento 2a", "Descripcion 2a", SubTema1);
+        GameObject Elemento2b = CrearElemento("Elemento 2b", "Descripcion 2b", SubTema1);
+        GameObject Elemento2c = CrearElemento("Elemento 2c", "Descripcion 2c", SubTema2);
+        GameObject Elemento2d = CrearElemento("Elemento 2d", "Descripcion 2d", SubTema2);
+
+        GameObject Coordenadas = CrearTema("Sistemas de coordenadas", "Sebastian", new DateTime(2015, 10, 23), VRClassroom);
+        GameObject Ejemplos = CrearTema("Ejemplos", "Sebastian", new DateTime(2015, 10, 23), VRClassroom);
+
+        GameObject SolarSystem = CrearElemento("Solar System", "Un modelo del sistema solar que muestra el funcionamiento basico de Unity", Ejemplos);
         Elemento ss = SolarSystem.GetComponent<Elemento>();
         ss.NombreEjecutable = "Solar_System";
         ss.SetIcono(IconoSolarSystem);
+        //ss.Completado = true;
 
-        menu.Agregar(TemaPrueba);
-        menu.Agregar(VRClassroom);
+        //menu.calcularProgresoInicial();
     }
 
     public GameObject CrearTema(string nombre, string autor, DateTime fecha, GameObject padre)

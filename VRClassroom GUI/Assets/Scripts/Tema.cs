@@ -92,29 +92,27 @@ public class Tema : MonoBehaviour{
 	}
 
 	public void CalcularProgreso(){
-		int totalElementos = Contenido.Count;
-		int totalCompleto = 0;
+		float pesoElementos = 1.0f / Contenido.Count;
+        float totalCompleto = 0;
 		foreach (GameObject item in Contenido) {
 			Tema mt = item.GetComponent<Tema>();
 			Elemento me = item.GetComponent<Elemento>();
 
 			if(mt != null){
-				if(mt.PorcentajeCompleto >= 1)
-					totalCompleto += 1;
+                totalCompleto += mt.PorcentajeCompleto * pesoElementos;
 			}
 			else{
 				if(me.Completado)
-					totalCompleto += 1;
+					totalCompleto += 1 * pesoElementos;
 			}
 		}
-
-        if(totalElementos > 0)
-		    PorcentajeCompleto = (totalCompleto * 100) / totalElementos;
+  
+        PorcentajeCompleto = totalCompleto;
 
         ProgressBarBehaviour pbg = this.gameObject.GetComponentInChildren<ProgressBarBehaviour>();
         float valorActual = pbg.Value;
         pbg.DecrementValue(valorActual);
-        pbg.IncrementValue(PorcentajeCompleto);
+        pbg.IncrementValue(PorcentajeCompleto*100);
 
 		if (TemaPadre != null) {
 			Tema mt = TemaPadre.GetComponent<Tema>();

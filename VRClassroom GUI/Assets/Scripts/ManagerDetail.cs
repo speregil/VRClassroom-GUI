@@ -228,9 +228,8 @@ public class ManagerDetail : MonoBehaviour {
 	}
 
 	public void BajarNivel(){
-		Button btnSubir = BotonSubir.GetComponent<Button>();
-		btnSubir.interactable = true;
-		DesplazarMenu (0);
+        BotonSubir.SetActive(true);
+        DesplazarMenu (0);
 		Desplazado = true;
 	}
 
@@ -246,16 +245,14 @@ public class ManagerDetail : MonoBehaviour {
                 DesplazarMenu(1);
                 if (mm.SubirNivel())
                 {
-                    Button btnSubir = BotonSubir.GetComponent<Button>();
-                    btnSubir.interactable = false;
+                    BotonSubir.SetActive(false);
                 }
             }
             else
             {
                 if (mm.RecuperarNivel())
                 {
-                    Button btnSubir = BotonSubir.GetComponent<Button>();
-                    btnSubir.interactable = false;
+                    BotonSubir.SetActive(false);
                 }
             }
         }	

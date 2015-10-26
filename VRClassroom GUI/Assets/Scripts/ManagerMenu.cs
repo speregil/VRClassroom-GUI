@@ -62,15 +62,22 @@ public class ManagerMenu : MonoBehaviour {
 		RectTransform rt = instantElement.GetComponent<RectTransform> ();
 		rt.sizeDelta = new Vector2 (185, 185);
 		instantElement.transform.localPosition = PosInicial;
+        instantElement.transform.localEulerAngles = Vector3.zero;
         instantElement.GetComponent<Collider>().enabled = true;
-		//instantElement.transform.localScale = EscalaInicial;
 
-		ListaElementos.AddLast(instantElement);
+        Tema mtActual = instantElement.GetComponent<Tema>();
+        Elemento meActual = instantElement.GetComponent<Elemento>();
+        /*if (mtActual != null)
+        {
+            mtActual.CalcularProgreso();
+        }*/
+
+        ListaElementos.AddLast(instantElement);
       
 		if (ListaElementos.Count == 1) {
 			ElementoActual = ListaElementos.First;
-			Tema mtActual = ListaElementos.First.Value.GetComponent<Tema>();
-			Elemento meActual = ListaElementos.First.Value.GetComponent<Elemento>();
+			mtActual = ListaElementos.First.Value.GetComponent<Tema>();
+		    meActual = ListaElementos.First.Value.GetComponent<Elemento>();
 			if(mtActual != null)
 				mtActual.EsActual = true;
 			else
@@ -513,6 +520,7 @@ public class ManagerMenu : MonoBehaviour {
                 esTema.EnDetalle = false;
                 esTema.EsActual = false;
                 esTema.Seleccionado = false;
+                esTema.CalcularProgreso();
             }
             else
             {
@@ -653,7 +661,6 @@ public class ManagerMenu : MonoBehaviour {
         Elemento elemActual = DetalleActual.Value.GetComponent<Elemento>();
         if(elemActual != null)
         {
-            Debug.Log("Si es elemento");
             elemActual.Ejecutar();
         }
     }
@@ -664,6 +671,18 @@ public class ManagerMenu : MonoBehaviour {
 		SaltoElemento = AnchoElementos + DistanciaElementos;
 		EscalaInicial = new Vector3 (1.0f, 1.0f, 1.0f);
 	}
+
+    public void calcularProgresoInicial()
+    {
+        foreach(GameObject actual in ListaElementos)
+        {
+            Tema mt = actual.GetComponent<Tema>();
+            if(mt != null)
+            {
+                mt.CalcularProgreso();
+            }
+        }
+    }
 
     public void Inicializar()
     {
