@@ -27,6 +27,7 @@ public class ManagerContexto : MonoBehaviour {
     private LinkedList<GameObject> MenuPrincipal;
     private LinkedList<GameObject> MenuGrabacion;
     private List<string> GrabacionesPendientes;
+    private int contadorScroll;
 
     public static string Estado;
     public static bool ACTIVO = false;
@@ -47,9 +48,9 @@ public class ManagerContexto : MonoBehaviour {
         MenuPrincipal.AddLast(BotonNotas);
         MenuPrincipal.AddLast(BotonWeb);
 
-        MenuGrabacion.AddLast(BotonGrabar);
-        MenuGrabacion.AddLast(BotonDetener);
         MenuGrabacion.AddLast(BotonCerrarGrabacion);
+        MenuGrabacion.AddLast(BotonDetener);
+        MenuGrabacion.AddLast(BotonGrabar);
 
         MenuActual = MenuPrincipal;
         BotonActual = MenuActual.First;
@@ -59,6 +60,7 @@ public class ManagerContexto : MonoBehaviour {
         PanelGrabacion.SetActive(false);
         MenuContexto.SetActive(false);
         Estado = APAGADO;
+        contadorScroll = 0;
     }
 
     public void OnLevelWasLoaded(int level)
@@ -73,9 +75,12 @@ public class ManagerContexto : MonoBehaviour {
 
     void Update()
     {
+        Button mButton;
 
-        if (Input.GetKeyDown(KeyCode.LeftAlt))
+        if (Input.GetKeyDown(KeyCode.LeftAlt) || Input.GetMouseButtonDown(1))
         {
+            
+
             switch (Estado)
             {
                 case APAGADO:
@@ -84,39 +89,49 @@ public class ManagerContexto : MonoBehaviour {
                     Estado = ENCENDIDO;
                     break;
                 case ENCENDIDO:
-                    CambiarSeleccion();
+                    mButton = BotonActual.Value.GetComponent<Button>();
+                    BotonAbierto = BotonActual;
+                    mButton.onClick.Invoke();
                     break;
                 case GRABACION:
-                    CambiarSeleccion();
+                    mButton = BotonActual.Value.GetComponent<Button>();
+                    mButton.onClick.Invoke();
                     break;
             }
         }
 
-        if (ACTIVO) { 
-            if (Input.GetKeyDown(KeyCode.Space))
+        if (ACTIVO)
+        {
+            if (Input.GetAxis("Mouse ScrollWheel") > 0)
             {
-                Button mButton = BotonActual.Value.GetComponent<Button>();
-
-                switch (Estado)
-                {
-                    case ENCENDIDO:
-                        BotonAbierto = BotonActual;
-                        mButton.onClick.Invoke();
-                        break;
-                    case GRABACION:
-                        mButton.onClick.Invoke();
-                        break;
-                }
+                CambiarSeleccion(1);
+                contadorScroll += 20;
+                ACTIVO = false;
             }
+
+            else if (Input.GetAxis("Mouse ScrollWheel") < 0)
+            {
+                CambiarSeleccion(-1);
+                contadorScroll += 20;
+                ACTIVO = false;
+            }     
+        }
+        else
+        {
+            contadorScroll -= 1;
+
+            if (contadorScroll <= 0)
+                ACTIVO = true;
         }
     }
 
-    public void CambiarSeleccion()
+    public void CambiarSeleccion(int direccion)
     {
         Image img = BotonActual.Value.GetComponentInChildren<Image>();
         img.sprite = BotonNormal;
 
-        LinkedListNode<GameObject> temp = BotonActual.Next;
+        LinkedListNode<GameObject> temp = direccion > 0 ? BotonActual.Next : BotonActual.Previous;
+
         if(temp != null)
         {
             BotonActual = temp;
@@ -125,7 +140,7 @@ public class ManagerContexto : MonoBehaviour {
         }
         else
         {
-            BotonActual = MenuActual.First;
+            BotonActual =  direccion > 0 ? MenuActual.First : MenuActual.Last;
             img = BotonActual.Value.GetComponentInChildren<Image>();
             img.sprite = BotonSeleccionado;
         }
@@ -194,5 +209,10 @@ public class ManagerContexto : MonoBehaviour {
         ventana.SetActive(false);
         MenuActual = MenuPrincipal;
         BotonActual = BotonAbierto;
+    }
+
+    public IEnumerator Esperar(float tiempo)
+    {
+        yield return new WaitForSeconds(tiempo);
     }
 }

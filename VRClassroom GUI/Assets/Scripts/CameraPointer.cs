@@ -30,7 +30,7 @@ public class CameraPointer : MonoBehaviour {
             seleccionActual = null;
         }
 
-        if (Input.GetKeyDown("space") && seleccionActual != null)
+        if ((Input.GetKeyDown("space") || Input.GetMouseButtonDown(0)) && seleccionActual != null)
         {
             Button btn = seleccionActual.GetComponent<Button>();
             if(btn != null)
