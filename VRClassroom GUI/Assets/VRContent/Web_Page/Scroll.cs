@@ -46,7 +46,5 @@ public class Scroll : MonoBehaviour {
             paraArriba = true;
             paraAbajo = true;
         }
-
-        Debug.Log(scrollValue);
     }
 }

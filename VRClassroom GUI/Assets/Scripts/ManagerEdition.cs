@@ -103,7 +103,7 @@ public class ManagerEdition : MonoBehaviour {
 
     public void AbrirMenuCrear()
     {
-        if (!(ManagerReproduccion.ACTIVO || ManagerContexto.ACTIVO))
+        if (!ManagerReproduccion.ACTIVO)
         {
             MenuCrear.SetActive(true);
             mPrincipal.MostarMenu(false);

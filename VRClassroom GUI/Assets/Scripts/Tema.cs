@@ -142,7 +142,7 @@ public class Tema : MonoBehaviour{
 		ManagerDetail detale = DetailCanvas.GetComponent<ManagerDetail> ();
         ManagerReproduccion rep = DetailCanvas.GetComponent<ManagerReproduccion>();
 
-        if (!menu.EnAnimacion && !ManagerContexto.ACTIVO)
+        if (!menu.EnAnimacion)
         {
             if (EnDetalle)
             {

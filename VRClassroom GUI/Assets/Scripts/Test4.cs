@@ -7,6 +7,8 @@ public class Test4 : MonoBehaviour
 
     public GameObject MainCanvas;
     public Sprite IconoSolarSystem;
+    public Sprite IconoWebPage;
+    public Sprite IconoClassroom;
     private ManagerMenu menu;
     private ManagerEdition editor;
 
@@ -41,9 +43,16 @@ public class Test4 : MonoBehaviour
         Elemento ss = SolarSystem.GetComponent<Elemento>();
         ss.NombreEjecutable = "Solar_System";
         ss.SetIcono(IconoSolarSystem);
-        //ss.Completado = true;
 
-        //menu.calcularProgresoInicial();
+        GameObject WebPage = CrearElemento("Sistema de coordenadas en Unity", "Documentación de como Unity3D implementa y usa sus sitema de coordenadas", Coordenadas);
+        Elemento wp = WebPage.GetComponent<Elemento>();
+        wp.NombreEjecutable = "Web_Page_Viewer";
+        wp.SetIcono(IconoWebPage);
+
+        GameObject classroom = CrearElemento("Sistema de coordenadas Leccion 1", "Lección de introducción al sistema de coordenadas", Coordenadas);
+        Elemento cr = classroom.GetComponent<Elemento>();
+        cr.NombreEjecutable = "Classroom";
+        cr.SetIcono(IconoClassroom);
     }
 
     public GameObject CrearTema(string nombre, string autor, DateTime fecha, GameObject padre)

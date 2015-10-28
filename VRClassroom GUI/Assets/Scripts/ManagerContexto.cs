@@ -30,7 +30,7 @@ public class ManagerContexto : MonoBehaviour {
     private int contadorScroll;
 
     public static string Estado;
-    public static bool ACTIVO = false;
+    public static bool ESTA_ACTIVO = false;
     public const string APAGADO = "APAGADO";
     public const string ENCENDIDO = "ENCENDIDO";
     public const string GRABACION = "GRABACION";
@@ -85,7 +85,7 @@ public class ManagerContexto : MonoBehaviour {
             {
                 case APAGADO:
                     MenuContexto.SetActive(true);
-                    ACTIVO = true;
+                    ESTA_ACTIVO = true;
                     Estado = ENCENDIDO;
                     break;
                 case ENCENDIDO:
@@ -100,20 +100,20 @@ public class ManagerContexto : MonoBehaviour {
             }
         }
 
-        if (ACTIVO)
+        if (ESTA_ACTIVO)
         {
             if (Input.GetAxis("Mouse ScrollWheel") > 0)
             {
                 CambiarSeleccion(1);
                 contadorScroll += 20;
-                ACTIVO = false;
+                ESTA_ACTIVO = false;
             }
 
             else if (Input.GetAxis("Mouse ScrollWheel") < 0)
             {
                 CambiarSeleccion(-1);
                 contadorScroll += 20;
-                ACTIVO = false;
+                ESTA_ACTIVO = false;
             }     
         }
         else
@@ -121,12 +121,13 @@ public class ManagerContexto : MonoBehaviour {
             contadorScroll -= 1;
 
             if (contadorScroll <= 0)
-                ACTIVO = true;
+                ESTA_ACTIVO = true;
         }
     }
 
     public void CambiarSeleccion(int direccion)
     {
+        Debug.Log("Cambiando seleccion");
         Image img = BotonActual.Value.GetComponentInChildren<Image>();
         img.sprite = BotonNormal;
 
@@ -150,7 +151,7 @@ public class ManagerContexto : MonoBehaviour {
     {
         MenuContexto.SetActive(false);
         Estado = APAGADO;
-        ACTIVO = false;
+        ESTA_ACTIVO = false;
     }
 
     public void Volver()
@@ -164,7 +165,7 @@ public class ManagerContexto : MonoBehaviour {
         }
         
         Estado = APAGADO;
-        ACTIVO = false;
+        ESTA_ACTIVO = false;
         MenuContexto.SetActive(false);
         Application.LoadLevel("MainMenu");
     }
