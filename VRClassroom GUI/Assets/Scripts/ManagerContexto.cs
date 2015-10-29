@@ -19,6 +19,7 @@ public class ManagerContexto : MonoBehaviour {
     public GameObject   MenuContexto;
     public Sprite       BotonNormal;
     public Sprite       BotonSeleccionado;
+    public GameObject   ObjReticulo;
     public string       ElementoAbierto;
 
     private LinkedListNode<GameObject> BotonActual;
@@ -28,6 +29,8 @@ public class ManagerContexto : MonoBehaviour {
     private LinkedList<GameObject> MenuGrabacion;
     private List<string> GrabacionesPendientes;
     private int contadorScroll;
+    private GameObject CameraMenu;
+    private GameObject AuxiliarMainCamera;
 
     public static string Estado;
     public static bool ESTA_ACTIVO = false;
@@ -71,6 +74,13 @@ public class ManagerContexto : MonoBehaviour {
         ElementoAbierto = mm.ElementoAbierto;
         if(level > 1)
             MainMenu.SetActive(false);
+
+        if(level == 4)
+        {
+            CameraMenu = cv.worldCamera.gameObject;
+            CameraMenu.SetActive(false);
+        }
+
     }
 
     void Update()
@@ -84,7 +94,17 @@ public class ManagerContexto : MonoBehaviour {
             switch (Estado)
             {
                 case APAGADO:
+                    if(Application.loadedLevel == 4)
+                    {
+                        GameObject profe = GameObject.Find("Teacher");
+                        speak sp = profe.GetComponent<speak>();
+                        sp.pauseAnimation();
+                        //AuxiliarMainCamera = GameObject.Find("Main Camera");
+                        //AuxiliarMainCamera.SetActive(false);
+                        //CameraMenu.SetActive(true);
+                    }
                     MenuContexto.SetActive(true);
+                    ObjReticulo.SetActive(false);
                     ESTA_ACTIVO = true;
                     Estado = ENCENDIDO;
                     break;
@@ -149,7 +169,16 @@ public class ManagerContexto : MonoBehaviour {
 
     public void Salir()
     {
+        if (Application.loadedLevel == 4)
+        {
+            GameObject profe = GameObject.Find("Teacher");
+            speak sp = profe.GetComponent<speak>();
+            sp.unpauseAnimation();
+            //AuxiliarMainCamera.SetActive(true);
+            //CameraMenu.SetActive(false);
+        }
         MenuContexto.SetActive(false);
+        ObjReticulo.SetActive(true);
         Estado = APAGADO;
         ESTA_ACTIVO = false;
     }
@@ -167,6 +196,7 @@ public class ManagerContexto : MonoBehaviour {
         Estado = APAGADO;
         ESTA_ACTIVO = false;
         MenuContexto.SetActive(false);
+        ObjReticulo.SetActive(true);
         Application.LoadLevel("MainMenu");
     }
 
@@ -174,6 +204,7 @@ public class ManagerContexto : MonoBehaviour {
     {
         Estado = GRABACION;
         PanelGrabacion.SetActive(true);
+        MenuContexto.SetActive(false);
         MenuActual = MenuGrabacion;
 
         foreach(GameObject boton in MenuActual)
@@ -208,6 +239,7 @@ public class ManagerContexto : MonoBehaviour {
     {
         Estado = ENCENDIDO;
         ventana.SetActive(false);
+        MenuContexto.SetActive(true);
         MenuActual = MenuPrincipal;
         BotonActual = BotonAbierto;
     }
