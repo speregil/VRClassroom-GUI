@@ -80,7 +80,7 @@ public class ManagerDetail : MonoBehaviour {
 
             if (mt != null)
             {
-                pbb1.IncrementValue(mt.PorcentajeCompleto);
+                pbb1.IncrementValue(mt.PorcentajeCompleto*100);
                 txt.text = mt.Nombre;
             }
             else
@@ -101,7 +101,7 @@ public class ManagerDetail : MonoBehaviour {
 
                 if (mt != null)
                 {
-                    pbb2.IncrementValue(mt.PorcentajeCompleto);
+                    pbb2.IncrementValue(mt.PorcentajeCompleto*100);
                     txt.text = mt.Nombre;
                 }
                 else
@@ -123,7 +123,7 @@ public class ManagerDetail : MonoBehaviour {
 
                     if (mt != null)
                     {
-                        pbb3.IncrementValue(mt.PorcentajeCompleto);
+                        pbb3.IncrementValue(mt.PorcentajeCompleto*100);
                         txt.text = mt.Nombre;
                     }
                     else
@@ -145,7 +145,7 @@ public class ManagerDetail : MonoBehaviour {
 
                         if (mt != null)
                         {
-                            pbb4.IncrementValue(mt.PorcentajeCompleto);
+                            pbb4.IncrementValue(mt.PorcentajeCompleto*100);
                             txt.text = mt.Nombre;
                         }
                         else

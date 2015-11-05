@@ -75,12 +75,6 @@ public class ManagerContexto : MonoBehaviour {
         if(level > 1)
             MainMenu.SetActive(false);
 
-        if(level == 4)
-        {
-            CameraMenu = cv.worldCamera.gameObject;
-            CameraMenu.SetActive(false);
-        }
-
     }
 
     void Update()
@@ -94,15 +88,6 @@ public class ManagerContexto : MonoBehaviour {
             switch (Estado)
             {
                 case APAGADO:
-                    if(Application.loadedLevel == 4)
-                    {
-                        GameObject profe = GameObject.Find("Teacher");
-                        speak sp = profe.GetComponent<speak>();
-                        sp.pauseAnimation();
-                        //AuxiliarMainCamera = GameObject.Find("Main Camera");
-                        //AuxiliarMainCamera.SetActive(false);
-                        //CameraMenu.SetActive(true);
-                    }
                     MenuContexto.SetActive(true);
                     ObjReticulo.SetActive(false);
                     ESTA_ACTIVO = true;
@@ -169,14 +154,6 @@ public class ManagerContexto : MonoBehaviour {
 
     public void Salir()
     {
-        if (Application.loadedLevel == 4)
-        {
-            GameObject profe = GameObject.Find("Teacher");
-            speak sp = profe.GetComponent<speak>();
-            sp.unpauseAnimation();
-            //AuxiliarMainCamera.SetActive(true);
-            //CameraMenu.SetActive(false);
-        }
         MenuContexto.SetActive(false);
         ObjReticulo.SetActive(true);
         Estado = APAGADO;
