@@ -6,7 +6,7 @@ public class Test4 : MonoBehaviour
 {
 
     public GameObject MainCanvas;
-    public Sprite IconoSolarSystem;
+    public Sprite IconoBoxShooter;
     public Sprite IconoWebPage;
     public Sprite IconoClassroom;
     private ManagerMenu menu;
@@ -39,10 +39,10 @@ public class Test4 : MonoBehaviour
         GameObject Coordenadas = CrearTema("Sistemas de coordenadas", "Sebastian", new DateTime(2015, 10, 23), VRClassroom);
         GameObject Ejemplos = CrearTema("Ejemplos", "Sebastian", new DateTime(2015, 10, 23), VRClassroom);
 
-        GameObject SolarSystem = CrearElemento("Solar System", "Un modelo del sistema solar que muestra el funcionamiento basico de Unity", Ejemplos);
-        Elemento ss = SolarSystem.GetComponent<Elemento>();
-        ss.NombreEjecutable = "Solar_System";
-        ss.SetIcono(IconoSolarSystem);
+        GameObject BoxShooter = CrearElemento("Box Shooter", "Un pequeño juego que muestra el funcionamiento basico de Unity", Ejemplos);
+        Elemento bs = BoxShooter.GetComponent<Elemento>();
+        bs.NombreEjecutable = "BoxShooter";
+        bs.SetIcono(IconoBoxShooter);
 
         GameObject WebPage = CrearElemento("Sistema de coordenadas en Unity", "Documentación de como Unity3D implementa y usa sus sitema de coordenadas", Coordenadas);
         Elemento wp = WebPage.GetComponent<Elemento>();

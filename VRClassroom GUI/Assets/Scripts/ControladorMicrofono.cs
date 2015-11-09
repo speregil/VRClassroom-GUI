@@ -21,6 +21,10 @@ public class ControladorMicrofono : MonoBehaviour
     public Text nombreArchivo;
     public Text textoAviso;
     public Text textoAvisoPanelReproduccion;
+    public Sprite btnReproducir;
+    public Sprite btnDetener;
+    private bool reproduccionActiva = true;
+    private Image botonActivo;
     private List<AudioClip> audList;
     private bool isRecording;
     private int nivelActual;
@@ -70,10 +74,23 @@ public class ControladorMicrofono : MonoBehaviour
     }
 
     //	Reproduce la informacion grabada
-    public void Reproducir(Text Label)
+    public void Reproducir(GameObject botonReproduccion)
     {
-        textoAvisoPanelReproduccion.text = "Reproduciendo";
-        StartCoroutine(Reproduciendo(Label.text));
+        if (reproduccionActiva)
+        {
+            textoAvisoPanelReproduccion.text = "Reproduciendo";
+            reproduccionActiva = false;
+            botonActivo = botonReproduccion.GetComponentsInChildren<Image>()[1];
+            botonActivo.sprite = btnDetener;
+            StartCoroutine(Reproduciendo(botonReproduccion.GetComponentInChildren<Text>().text));
+        }
+        else
+        {
+            textoAvisoPanelReproduccion.text = "Detenido";
+            reproduccionActiva = true;
+            botonActivo.sprite = btnReproducir;
+            PararReproduccion();
+        }
     }
 
     //	Graba
@@ -117,6 +134,11 @@ public class ControladorMicrofono : MonoBehaviour
         aud.Play();
         yield return new WaitForSeconds(aud.clip.length);
         textoAvisoPanelReproduccion.text = "Detenido";
+    }
+
+    public void PararReproduccion()
+    {
+        aud.Stop();
     }
 
     //Retorna el numero de grabacion actual para este modulo
