@@ -43,7 +43,16 @@ public class ManagerEdition : MonoBehaviour {
         test.OnTest();
     }
 
-	public GameObject CrearTema(string nNombre, string nAutor, DateTime nFecha){
+    public void OnLevelWasLoaded(int level)
+    {
+        if (level == 1)
+        {
+            Canvas cv = GetComponent<Canvas>();
+            cv.worldCamera = Camera.main;
+        }
+    }
+
+    public GameObject CrearTema(string nNombre, string nAutor, DateTime nFecha){
 		GameObject nuevoTema = GameObject.Instantiate (PrefTema);
 		Tema mTema = nuevoTema.GetComponent<Tema> ();
 		mTema.Nombre = nNombre;

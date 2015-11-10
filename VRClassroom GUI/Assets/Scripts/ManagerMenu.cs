@@ -53,11 +53,20 @@ public class ManagerMenu : MonoBehaviour {
 
 	}
 
-	/**
+    public void OnLevelWasLoaded(int level)
+    {
+        if (level == 1)
+        {
+            Canvas cv = GetComponent<Canvas>();
+            cv.worldCamera = Camera.main;
+        }
+    }
+
+    /**
 	 * Agrega un nuevo elemento al menu
 	 * Actualmente lo coloca en la ultima posicion de la lista
 	 * */
-	public void Agregar(GameObject instantElement){
+    public void Agregar(GameObject instantElement){
 		instantElement.transform.SetParent(ScrollPanel.transform, false);
 		RectTransform rt = instantElement.GetComponent<RectTransform> ();
 		rt.sizeDelta = new Vector2 (185, 185);

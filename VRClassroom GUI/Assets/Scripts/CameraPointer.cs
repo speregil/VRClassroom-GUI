@@ -13,9 +13,9 @@ public class CameraPointer : MonoBehaviour {
 	void Start () {
         imgPointer = pointer.GetComponent<Image>();
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update () {
 
         Ray ray = PointerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
         RaycastHit hit;

@@ -38,6 +38,15 @@ public class ManagerDetail : MonoBehaviour {
         pbb4 = Grafica4.GetComponent<ProgressBarBehaviour>();
     }
 
+    public void OnLevelWasLoaded(int level)
+    {
+        if (level == 1)
+        {
+            Canvas cv = GetComponent<Canvas>();
+            cv.worldCamera = Camera.main;
+        }
+    }
+
     public void AbrirInfoProgreso(string nombreTema, List<GameObject> ContenidoTema)
     {
         DatosActuales = new GameObject[4];

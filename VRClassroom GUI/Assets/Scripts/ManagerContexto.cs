@@ -89,7 +89,7 @@ public class ManagerContexto : MonoBehaviour {
             {
                 case APAGADO:
                     MenuContexto.SetActive(true);
-                    ObjReticulo.SetActive(false);
+                    //ObjReticulo.SetActive(false);
                     ESTA_ACTIVO = true;
                     Estado = ENCENDIDO;
                     break;
@@ -155,7 +155,7 @@ public class ManagerContexto : MonoBehaviour {
     public void Salir()
     {
         MenuContexto.SetActive(false);
-        ObjReticulo.SetActive(true);
+        //ObjReticulo.SetActive(true);
         Estado = APAGADO;
         ESTA_ACTIVO = false;
     }
@@ -173,7 +173,7 @@ public class ManagerContexto : MonoBehaviour {
         Estado = APAGADO;
         ESTA_ACTIVO = false;
         MenuContexto.SetActive(false);
-        ObjReticulo.SetActive(true);
+        //ObjReticulo.SetActive(true);
         Application.LoadLevel("MainMenu");
     }
 
